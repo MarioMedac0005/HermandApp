@@ -47,4 +47,20 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Obtener la banda que gestiona un usuario.
+     */
+    public function band(): BelongsTo
+    {
+        return $this->belongsTo(Band::class);
+    }
+
+    /**
+     * Obtener la hermandad que gestiona un usuario.
+     */
+    public function brotherhood(): BelongsTo
+    {
+        return $this->belongsTo(Brotherhood::class);
+    }
 }
