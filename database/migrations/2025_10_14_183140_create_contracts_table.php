@@ -17,9 +17,10 @@ return new class extends Migration
             $table->enum('status', ['expired', 'pending', 'active'])->default('pending');
             $table->decimal('amount', 10, 2)->nullable();
             $table->text('description')->nullable(); 
-            $table->foreignId('procession_id')->constrained();
             $table->foreignId('band_id')->constrained();
+            $table->foreignId('procession_id')->constrained();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

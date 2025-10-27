@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('rehearsal_space')->nullable();
             $table->string('email')->unique();
             $table->timestamps();
+            $table->softDeletes();
 
         });
     }

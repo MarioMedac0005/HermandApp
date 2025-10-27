@@ -18,8 +18,9 @@ return new class extends Migration
             $table->text('itinerary');
             $table->datetime('checkout_time');
             $table->datetime('checkin_time');
-            $table->foreignId('contract_id')->constrained();
+            $table->foreignId('brotherhood_id')->constrained();
             $table->timestamps();
+            $table->softDeletes();
         });
         
     }
