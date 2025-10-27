@@ -9,6 +9,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Contract extends Model
 {
     use SoftDeletes;
+
+    protected $fillable = [
+        'date',
+        'status',
+        'amount',
+        'description',
+        'band_id',
+        'procession_id'
+    ];
     
     /**
      * Obtener la procesion de un contrato.

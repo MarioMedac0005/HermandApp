@@ -11,6 +11,15 @@ class Procession extends Model
 {
     use SoftDeletes;
 
+    protected $fillable = [
+        'name',
+        'type',
+        'itinerary',
+        'checkout_time',
+        'checkin_time',
+        'brotherhood_id'
+    ];
+
     /**
      * Obtener la hermandad de una procesión.
      */

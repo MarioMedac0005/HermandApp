@@ -9,6 +9,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Brotherhood extends Model
 {
     use SoftDeletes;
+
+    protected $fillable = [
+        'name',
+        'city',
+        'office',
+        'phone_number',
+        'email'
+    ];
     
     /**
      * Obtener los usuarios de una hermandad.

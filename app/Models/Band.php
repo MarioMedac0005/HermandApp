@@ -10,6 +10,13 @@ class Band extends Model
 {
     use SoftDeletes;
 
+    protected $fillable = [
+        'name',
+        'city',
+        'rehearsal_space',
+        'email'
+    ];
+
     /**
      * Obtener los usuarios de una banda.
      */

@@ -10,6 +10,13 @@ class Availability extends Model
 {
     use SoftDeletes;
 
+    protected $fillable = [
+        'date',
+        'status',
+        'description',
+        'band_id'
+    ];
+
     /**
      * Obtener la banda de una disponibilidad.
      */
