@@ -14,13 +14,13 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('surname')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            // $table->string('surname')->nullable();
-            // $table->enum('type', ['band_admin', 'brotherhood_admin', 'guest'])->default('guest');
-            // $table->foreignId('band_id')->constrained();
-            // $table->foreignId('brotherhood_id')->constrained();
+            $table->enum('type', ['band_admin', 'brotherhood_admin', 'guest'])->default('guest');
+            $table->foreignId('band_id')->constrained();
+            $table->foreignId('brotherhood_id')->constrained();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
