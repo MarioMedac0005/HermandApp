@@ -19,8 +19,8 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->enum('type', ['band_admin', 'brotherhood_admin', 'guest'])->default('guest');
-            $table->foreignId('band_id')->constrained();
-            $table->foreignId('brotherhood_id')->constrained();
+            $table->foreignId('band_id')->nullable()->constrained();
+            $table->foreignId('brotherhood_id')->nullable()->constrained();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
