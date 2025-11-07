@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Band;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBandRequest;
 use App\Http\Requests\UpdateBandRequest;
@@ -16,7 +15,24 @@ class BandController extends Controller
      */
     public function index()
     {
-        return BandResource::collection(Band::all());
+        try {
+
+            $band = Band::paginate(10);
+
+            return BandResource::collection($band)
+                ->additional([
+                    'success' => true,
+                    'message' => 'Listado de bandas paginadas obtenido correctamente'
+                ])
+                ->response()
+                ->setStatusCode(200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ha ocurrido un error al obtener el listado de bandas',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -24,9 +40,25 @@ class BandController extends Controller
      */
     public function store(StoreBandRequest $request)
     {
-        $band = Band::create($request->validated());
 
-        return new BandResource($band);
+        try {
+
+            $band = Band::create($request->validated());
+
+            return (new BandResource($band))
+                ->additional([
+                    'success' => true,
+                    'message' => 'La banda ha sido creada correctamente'
+                ])
+                ->response()
+                ->setStatusCode(201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ha ocurrido un error al intentar crear una banda',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -34,7 +66,22 @@ class BandController extends Controller
      */
     public function show(Band $band)
     {
-        return new BandResource($band);
+        try {
+
+            return (new BandResource($band))
+                ->additional([
+                    'success' => true,
+                    'message' => 'La banda ha sido obtenida correctamente',
+                ])
+                ->response()
+                ->setStatusCode(200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ha ocurrido un error al intentar mostrar una banda',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -42,9 +89,24 @@ class BandController extends Controller
      */
     public function update(UpdateBandRequest $request, Band $band)
     {
-        $band->update($request->validated());
+        try {
 
-        return new BandResource($band);
+            $band->update($request->validated());
+
+            return (new BandResource($band))
+                ->additional([
+                    'success' => true,
+                    'message' => 'La banda ha sido actualizada correctamente',
+                ])
+                ->response()
+                ->setStatusCode(200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ha ocurrido un error al intentar crear una banda',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
 
@@ -53,8 +115,21 @@ class BandController extends Controller
      */
     public function destroy(Band $band)
     {
-        $band->delete();
+        try {
 
-        return response()->json(['message' => 'Band deleted successfully']);
+            $band->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'La banda ha sido eliminada correctamente',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ha ocurrido un error al intentar borrar una banda',
+                'error' => $e->getMessage(),
+            ], 500);
+
+        }
     }
 }

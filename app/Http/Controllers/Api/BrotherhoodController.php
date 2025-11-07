@@ -7,7 +7,6 @@ use App\Http\Requests\StoreBrotherhoodRequest;
 use App\Http\Requests\UpdateBrotherhoodRequest;
 use App\Http\Resources\BrotherhoodResource;
 use App\Models\Brotherhood;
-use Illuminate\Http\Request;
 
 class BrotherhoodController extends Controller
 {
@@ -16,7 +15,24 @@ class BrotherhoodController extends Controller
      */
     public function index()
     {
-        return BrotherhoodResource::collection(Brotherhood::all());
+        try {
+
+            $brotherhood = Brotherhood::paginate(10);
+
+            return BrotherhoodResource::collection($brotherhood)
+                ->additional([
+                    'success' => true,
+                    'message' => 'Listado de hermandades paginadas obtenido correctamente'
+                ])
+                ->response()
+                ->setStatusCode(200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ha ocurrido un error al obtener el listado de hermandades',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -24,9 +40,24 @@ class BrotherhoodController extends Controller
      */
     public function store(StoreBrotherhoodRequest $request)
     {
-        $brotherhood = Brotherhood::create($request->validated());
+        try {
 
-        return new BrotherhoodResource($brotherhood);
+            $brotherhood = Brotherhood::create($request->validated());
+
+            return (new BrotherhoodResource($brotherhood))
+                ->additional([
+                    'success' => true,
+                    'message' => 'La hermandad ha sido creada correctamente'
+                ])
+                ->response()
+                ->setStatusCode(201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ha ocurrido un error al intentar crear una hermandad',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -34,7 +65,22 @@ class BrotherhoodController extends Controller
      */
     public function show(Brotherhood $brotherhood)
     {
-        return new BrotherhoodResource($brotherhood);
+        try {
+
+            return (new BrotherhoodResource($brotherhood))
+                ->additional([
+                    'success' => true,
+                    'message' => 'La hermandad ha sido obtenida correctamente',
+                ])
+                ->response()
+                ->setStatusCode(200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ha ocurrido un error al intentar mostrar una hermandad',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -42,9 +88,24 @@ class BrotherhoodController extends Controller
      */
     public function update(UpdateBrotherhoodRequest $request, Brotherhood $brotherhood)
     {
-        $brotherhood->update($request->validated());
+        try {
 
-        return new BrotherhoodResource($brotherhood);
+            $brotherhood->update($request->validated());
+
+            return (new BrotherhoodResource($brotherhood))
+                ->additional([
+                    'success' => true,
+                    'message' => 'La hermandad ha sido actualizada correctamente',
+                ])
+                ->response()
+                ->setStatusCode(200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ha ocurrido un error al intentar crear una hermandad',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -52,8 +113,20 @@ class BrotherhoodController extends Controller
      */
     public function destroy(Brotherhood $brotherhood)
     {
-        $brotherhood->delete();
+        try {
 
-        return response()->json(['message' => 'Brotherhood deleted successfully']);
+            $brotherhood->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'La hermandad ha sido eliminada correctamente',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ha ocurrido un error al intentar borrar una hermandad',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 }

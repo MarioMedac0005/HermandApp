@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Procession;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProcessionRequest;
 use App\Http\Requests\UpdateProcessionRequest;
@@ -28,7 +27,7 @@ class ProcessionController extends Controller
                 ])
                 ->response()
                 ->setStatusCode(200);
-            
+
         } catch (\Exception $e) {
 
             return response()->json([
@@ -83,7 +82,7 @@ class ProcessionController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Ha ocurrido un error al intentar crear una banda',
+                'message' => 'Ha ocurrido un error al intentar mostrar una banda',
                 'error' => $e->getMessage(),
             ], 500);
         }
@@ -106,12 +105,10 @@ class ProcessionController extends Controller
                 ])
                 ->response()
                 ->setStatusCode(200);
-
         } catch (\Exception $e) {
-
             return response()->json([
                 'success' => false,
-                'message' => 'Ha ocurrido un error al intentar crear una banda',
+                'message' => 'Ha ocurrido un error al intentar actualizar una procesión',
                 'error' => $e->getMessage(),
             ], 500);
 
@@ -132,12 +129,10 @@ class ProcessionController extends Controller
                 'success' => true,
                 'message' => 'La procesión ha sido eliminada correctamente',
             ], 200);
-
         } catch (\Exception $e) {
-
             return response()->json([
                 'success' => false,
-                'message' => 'Ha ocurrido un error al intentar crear una banda',
+                'message' => 'Ha ocurrido un error al intentar borrar una procesión',
                 'error' => $e->getMessage(),
             ], 500);
 

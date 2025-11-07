@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Contract;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreContractRequest;
 use App\Http\Requests\UpdateContractRequest;
@@ -16,7 +15,24 @@ class ContractController extends Controller
      */
     public function index()
     {
-        return ContractResource::collection(Contract::all());
+        try {
+
+            $contract = Contract::paginate(10);
+
+            return ContractResource::collection($contract)
+                ->additional([
+                    'success' => true,
+                    'message' => 'Listado de contratos paginadas obtenido correctamente'
+                ])
+                ->response()
+                ->setStatusCode(200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ha ocurrido un error al obtener el listado de contratos',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -24,9 +40,24 @@ class ContractController extends Controller
      */
     public function store(StoreContractRequest $request)
     {
-        $contract = Contract::create($request->validated());
+        try {
 
-        return new ContractResource($contract);
+            $contract = Contract::create($request->validated());
+
+            return (new ContractResource($contract))
+                ->additional([
+                    'success' => true,
+                    'message' => 'La contratos ha sido creada correctamente'
+                ])
+                ->response()
+                ->setStatusCode(201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ha ocurrido un error al intentar crear una contratos',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -34,7 +65,22 @@ class ContractController extends Controller
      */
     public function show(Contract $contract)
     {
-        return new ContractResource($contract);
+        try {
+
+            return (new ContractResource($contract))
+                ->additional([
+                    'success' => true,
+                    'message' => 'La contratos ha sido obtenida correctamente',
+                ])
+                ->response()
+                ->setStatusCode(200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ha ocurrido un error al intentar mostrar una contratos',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -42,7 +88,24 @@ class ContractController extends Controller
      */
     public function update(UpdateContractRequest $request, Contract $contract)
     {
-        $contract->update($request->validated());
+        try {
+
+            $contract->update($request->validated());
+
+            return (new ContractResource($contract))
+                ->additional([
+                    'success' => true,
+                    'message' => 'La contratos ha sido actualizada correctamente',
+                ])
+                ->response()
+                ->setStatusCode(200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ha ocurrido un error al intentar crear una contratos',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -50,8 +113,20 @@ class ContractController extends Controller
      */
     public function destroy(Contract $contract)
     {
-        $contract->delete();
+        try {
 
-        return response()->json(['message' => 'Contract deleted successfully']);
+            $contract->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'La contrato ha sido eliminada correctamente',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ha ocurrido un error al intentar borrar una contrato',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 }

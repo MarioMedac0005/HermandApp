@@ -7,7 +7,6 @@ use App\Http\Requests\StoreAvailabilityRequest;
 use App\Http\Requests\UpdateAvailabilityRequest;
 use App\Http\Resources\AvailabilityResource;
 use App\Models\Availability;
-use Illuminate\Http\Request;
 
 class AvailabilityController extends Controller
 {
@@ -16,7 +15,24 @@ class AvailabilityController extends Controller
      */
     public function index()
     {
-        return AvailabilityResource::collection(Availability::all());
+        try {
+
+            $availability = Availability::paginate(10);
+
+            return AvailabilityResource::collection($availability)
+                ->additional([
+                    'success' => true,
+                    'message' => 'Listado de disponibilidad paginadas obtenido correctamente'
+                ])
+                ->response()
+                ->setStatusCode(200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ha ocurrido un error al obtener el listado de disponibilidad',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -24,9 +40,24 @@ class AvailabilityController extends Controller
      */
     public function store(StoreAvailabilityRequest $request)
     {
-        $availability = Availability::create($request->validated());
+        try {
 
-        return new AvailabilityResource($availability);
+            $availability = Availability::create($request->validated());
+
+            return (new AvailabilityResource($availability))
+                ->additional([
+                    'success' => true,
+                    'message' => 'La disponibilidad ha sido creada correctamente'
+                ])
+                ->response()
+                ->setStatusCode(201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ha ocurrido un error al intentar crear una disponibilidad',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -34,7 +65,22 @@ class AvailabilityController extends Controller
      */
     public function show(Availability $availability)
     {
-        return new AvailabilityResource($availability);
+        try {
+
+            return (new AvailabilityResource($availability))
+                ->additional([
+                    'success' => true,
+                    'message' => 'La disponibilidad ha sido obtenida correctamente',
+                ])
+                ->response()
+                ->setStatusCode(200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ha ocurrido un error al intentar mostrar una disponibilidad',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -42,9 +88,24 @@ class AvailabilityController extends Controller
      */
     public function update(UpdateAvailabilityRequest $request, Availability $availability)
     {
-        $availability->update($request->validated());
+        try {
 
-        return new AvailabilityResource($availability);
+            $availability->update($request->validated());
+
+            return (new AvailabilityResource($availability))
+                ->additional([
+                    'success' => true,
+                    'message' => 'La disponibilidad ha sido actualizada correctamente',
+                ])
+                ->response()
+                ->setStatusCode(200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ha ocurrido un error al intentar crear una disponibilidad',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -52,8 +113,20 @@ class AvailabilityController extends Controller
      */
     public function destroy(Availability $availability)
     {
-        $availability->delete();
+        try {
 
-        return response()->json(['message' => 'availability deleted successfully']);
+            $availability->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'La disponibilidad ha sido eliminada correctamente',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ha ocurrido un error al intentar borrar una disponibilidad',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 }
