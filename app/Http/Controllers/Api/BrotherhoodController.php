@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\BrotherhoodRequest;
+use App\Http\Requests\StoreBrotherhoodRequest;
+use App\Http\Requests\UpdateBrotherhoodRequest;
 use App\Http\Resources\BrotherhoodResource;
 use App\Models\Brotherhood;
 use Illuminate\Http\Request;
@@ -21,9 +22,9 @@ class BrotherhoodController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(BrotherhoodRequest $request)
+    public function store(StoreBrotherhoodRequest $request)
     {
-        $brotherhood = Brotherhood::create($request->validate());
+        $brotherhood = Brotherhood::create($request->validated());
 
         return new BrotherhoodResource($brotherhood);
     }
@@ -39,9 +40,9 @@ class BrotherhoodController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(BrotherhoodRequest $request, Brotherhood $brotherhood)
+    public function update(UpdateBrotherhoodRequest $request, Brotherhood $brotherhood)
     {
-        $brotherhood->update($request->validate());
+        $brotherhood->update($request->validated());
 
         return new BrotherhoodResource($brotherhood);
     }

@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Models\Procession;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ProcessionRequest;
+use App\Http\Requests\StoreProcessionRequest;
+use App\Http\Requests\UpdateProcessionRequest;
 use App\Http\Resources\ProcessionResource;
 
 class ProcessionController extends Controller
@@ -15,17 +16,53 @@ class ProcessionController extends Controller
      */
     public function index()
     {
-        return ProcessionResource::collection(Procession::all());
+
+        try {
+
+            $processions = Procession::paginate(10);
+
+            return ProcessionResource::collection($processions)
+                ->additional([
+                    'success' => true,
+                    'message' => 'Listado de procesiones paginadas obtenido correctamente'
+                ])
+                ->response()
+                ->setStatusCode(200);
+            
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Ha ocurrido un error al obtener el listado de procesiones',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ProcessionRequest $request)
+    public function store(StoreProcessionRequest $request)
     {
-        $procession = Procession::create($request->validate());
 
-        return new ProcessionResource($procession);
+        try {
+
+            $procession = Procession::create($request->validated());
+
+            return (new ProcessionResource($procession))
+                ->additional([
+                    'success' => true,
+                    'message' => 'La procesion ha sido creada correctamente'
+                ])
+                ->response()
+                ->setStatusCode(201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ha ocurrido un error al intentar crear una procesion',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -33,17 +70,52 @@ class ProcessionController extends Controller
      */
     public function show(Procession $procession)
     {
-        return new ProcessionResource($procession);
+
+        try {
+
+            return (new ProcessionResource($procession))
+                ->additional([
+                    'success' => true,
+                    'message' => 'La procesión ha sido obtenida correctamente',
+                ])
+                ->response()
+                ->setStatusCode(200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ha ocurrido un error al intentar crear una banda',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(ProcessionRequest $request, Procession $procession)
+    public function update(UpdateProcessionRequest $request, Procession $procession)
     {
-        $procession->update($request->validate());
 
-        return new ProcessionResource($procession);
+        try {
+
+            $procession->update($request->validated());
+
+            return (new ProcessionResource($procession))
+                ->additional([
+                    'success' => true,
+                    'message' => 'La procesión ha sido actualizada correctamente',
+                ])
+                ->response()
+                ->setStatusCode(200);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Ha ocurrido un error al intentar crear una banda',
+                'error' => $e->getMessage(),
+            ], 500);
+
+        }
     }
 
     /**
@@ -51,9 +123,24 @@ class ProcessionController extends Controller
      */
     public function destroy(Procession $procession)
     {
-        $procession->delete();
 
-         return response()->json(['message' => 'Procession deleted successfully']);
+        try {
 
+            $procession->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'La procesión ha sido eliminada correctamente',
+            ], 200);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Ha ocurrido un error al intentar crear una banda',
+                'error' => $e->getMessage(),
+            ], 500);
+
+        }
     }
 }

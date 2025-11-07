@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Models\Contract;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ContractRequest;
+use App\Http\Requests\StoreContractRequest;
+use App\Http\Requests\UpdateContractRequest;
 use App\Http\Resources\ContractResource;
 
 class ContractController extends Controller
@@ -21,9 +22,9 @@ class ContractController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ContractRequest $request)
+    public function store(StoreContractRequest $request)
     {
-        $contract = Contract::create($request->validate());
+        $contract = Contract::create($request->validated());
 
         return new ContractResource($contract);
     }
@@ -39,9 +40,9 @@ class ContractController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(ContractRequest $request, Contract $contract)
+    public function update(UpdateContractRequest $request, Contract $contract)
     {
-        $contract->update($request->validate());
+        $contract->update($request->validated());
     }
 
     /**

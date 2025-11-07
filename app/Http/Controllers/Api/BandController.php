@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Models\Band;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\BandRequest;
+use App\Http\Requests\StoreBandRequest;
+use App\Http\Requests\UpdateBandRequest;
 use App\Http\Resources\BandResource;
 
 class BandController extends Controller
@@ -21,7 +22,7 @@ class BandController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(BandRequest $request)
+    public function store(StoreBandRequest $request)
     {
         $band = Band::create($request->validated());
 
@@ -39,7 +40,7 @@ class BandController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(BandRequest $request, Band $band)
+    public function update(UpdateBandRequest $request, Band $band)
     {
         $band->update($request->validated());
 
