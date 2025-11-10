@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreBrotherhoodRequest;
-use App\Http\Requests\UpdateBrotherhoodRequest;
-use App\Http\Resources\BrotherhoodResource;
-use App\Models\Brotherhood;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
+use App\Http\Resources\UserResource;
+use App\Models\User;
 
-class BrotherhoodController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,19 +17,19 @@ class BrotherhoodController extends Controller
     {
         try {
 
-            $brotherhood = Brotherhood::paginate(10);
+            $user = User::paginate(10);
 
-            return BrotherhoodResource::collection($brotherhood)
+            return UserResource::collection($user)
                 ->additional([
                     'success' => true,
-                    'message' => 'Listado de hermandades paginadas obtenido correctamente'
+                    'message' => 'Listado de usuarios paginadas obtenido correctamente'
                 ])
                 ->response()
                 ->setStatusCode(200);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Ha ocurrido un error al obtener el listado de hermandades',
+                'message' => 'Ha ocurrido un error al obtener el listado de usuarios',
                 'error' => $e->getMessage(),
             ], 500);
         }
@@ -38,23 +38,23 @@ class BrotherhoodController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreBrotherhoodRequest $request)
+    public function store(StoreUserRequest $request)
     {
         try {
 
-            $brotherhood = Brotherhood::create($request->validated());
+            $user = User::create($request->validated());
 
-            return (new BrotherhoodResource($brotherhood))
+            return (new UserResource($user))
                 ->additional([
                     'success' => true,
-                    'message' => 'La hermandad ha sido creada correctamente'
+                    'message' => 'El usuario ha sido creado correctamente'
                 ])
                 ->response()
                 ->setStatusCode(201);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Ha ocurrido un error al intentar crear una hermandad',
+                'message' => 'Ha ocurrido un error al intentar crear un usuario',
                 'error' => $e->getMessage(),
             ], 500);
         }
@@ -63,21 +63,21 @@ class BrotherhoodController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Brotherhood $brotherhood)
+    public function show(User $user)
     {
         try {
 
-            return (new BrotherhoodResource($brotherhood))
+            return (new UserResource($user))
                 ->additional([
                     'success' => true,
-                    'message' => 'La hermandad ha sido obtenida correctamente',
+                    'message' => 'El usuario ha sido obtenido correctamente',
                 ])
                 ->response()
                 ->setStatusCode(200);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Ha ocurrido un error al intentar mostrar una hermandad',
+                'message' => 'Ha ocurrido un error al intentar mostrar un usuario',
                 'error' => $e->getMessage(),
             ], 500);
         }
@@ -86,23 +86,23 @@ class BrotherhoodController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateBrotherhoodRequest $request, Brotherhood $brotherhood)
+    public function update(UpdateUserRequest $request, User $user)
     {
         try {
 
-            $brotherhood->update($request->validated());
+            $user->update($request->validated());
 
-            return (new BrotherhoodResource($brotherhood))
+            return (new UserResource($user))
                 ->additional([
                     'success' => true,
-                    'message' => 'La hermandad ha sido actualizada correctamente',
+                    'message' => 'El usuario ha sido actualizado correctamente',
                 ])
                 ->response()
                 ->setStatusCode(200);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Ha ocurrido un error al intentar actualizar una hermandad',
+                'message' => 'Ha ocurrido un error al intentar actualizar un usuario',
                 'error' => $e->getMessage(),
             ], 500);
         }
@@ -111,20 +111,20 @@ class BrotherhoodController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Brotherhood $brotherhood)
+    public function destroy(User $user)
     {
         try {
 
-            $brotherhood->delete();
+            $user->delete();
 
             return response()->json([
                 'success' => true,
-                'message' => 'La hermandad ha sido eliminada correctamente',
+                'message' => 'El usuario ha sido eliminado correctamente',
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Ha ocurrido un error al intentar borrar una hermandad',
+                'message' => 'Ha ocurrido un error al intentar borrar un usuario',
                 'error' => $e->getMessage(),
             ], 500);
         }

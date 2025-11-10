@@ -24,11 +24,11 @@ class UpdateUserRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'surname' => ['nullable', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $this->route('user')->id],
             'password' => ['nullable', 'string', 'min:8'],
-            'type' => ['required', 'in:band_admin,brotherhood_admin,guest'],
-            'band_id' => ['required', 'exists:bands,id'],
-            'brotherhood_id' => ['required', 'exists:brotherhoods,id'],
+            'type' => ['in:band_admin,brotherhood_admin,guest'],
+            'band_id' => ['nullable', 'exists:bands,id'],
+            'brotherhood_id' => ['nullable', 'exists:brotherhoods,id']
         ];
     }
 
