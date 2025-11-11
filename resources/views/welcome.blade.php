@@ -19,9 +19,9 @@
             </style>
         @endif
     </head>
-    <body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
-        <div class="text-white">
-            <h1 class="text-white text-3xl">Hola Javi, dejanos mas tiempo para las vistas en React :) 🤬</h1>
+    <body class="bg-[#FDFDFC] text-[#1b1b18] flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
+        <div class="text-black">
+            <h1 class="text-3xl">Hola Javi, dejanos mas tiempo para las vistas en React :) 🤬</h1>
             <h2 class="text-xl my-4">Componentes de HermandApp:</h2>
             <div class="pl-10 flex flex-col gap-4">
                 <p>Mario Ortiz Hidalgo</p>
