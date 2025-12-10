@@ -26,7 +26,7 @@ class Band extends Model
     {
         return $this->hasMany(User::class);
     }
-    
+
     /**
      * Obtener los contratos de una banda.
      */
@@ -42,5 +42,38 @@ class Band extends Model
     {
         return $this->hasMany(Availability::class);
     }
-}
 
+    /**
+     * Relación polimórfica con Media
+     */
+    public function media()
+    {
+        return $this->morphMany(Media::class, 'model');
+    }
+
+    // --- OPCIONALES ---
+
+    /**
+     * Obtener directamente la foto de perfil del modelo.
+     */
+    public function profileImage()
+    {
+        return $this->morphOne(Media::class, 'model')->where('category', 'profile');
+    }
+
+    /**
+     * Obtener portada/cabecera de la banda.
+     */
+    public function banner()
+    {
+        return $this->morphOne(Media::class, 'model')->where('category', 'banner');
+    }
+
+    /**
+     * Obtener todas las imágenes de la categoría "gallery".
+     */
+    public function gallery()
+    {
+        return $this->morphMany(Media::class, 'model')->where('category', 'gallery');
+    }
+}

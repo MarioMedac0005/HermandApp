@@ -67,4 +67,22 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Brotherhood::class);
     }
+
+    /**
+     * Relación polimórfica con Media
+     */
+    public function media()
+    {
+        return $this->morphMany(Media::class, 'model');
+    }
+
+    // --- OPCIONAL ---
+
+    /**
+     * Obtener directamente la foto de perfil del modelo.
+     */
+    public function profileImage()
+    {
+        return $this->morphOne(Media::class, 'model')->where('category', 'profile');
+    }
 }
