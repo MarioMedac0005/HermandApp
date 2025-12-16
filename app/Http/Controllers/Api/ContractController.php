@@ -75,11 +75,7 @@ class ContractController extends Controller
                 ->response()
                 ->setStatusCode(200);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Ha ocurrido un error al intentar mostrar una contratos',
-                'error' => $e->getMessage(),
-            ], 500);
+            return $this->errorResponse('Ha ocurrido un error al intentar mostrar una contratos', $e->getMessage());
         }
     }
 
@@ -100,11 +96,7 @@ class ContractController extends Controller
                 ->response()
                 ->setStatusCode(200);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Ha ocurrido un error al intentar crear una contratos',
-                'error' => $e->getMessage(),
-            ], 500);
+            return $this->errorResponse('Ha ocurrido un error al intentar crear una contratos', $e->getMessage());
         }
     }
 
@@ -122,11 +114,7 @@ class ContractController extends Controller
                 'message' => 'La contrato ha sido eliminada correctamente',
             ], 200);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Ha ocurrido un error al intentar borrar una contrato',
-                'error' => $e->getMessage(),
-            ], 500);
+            return $this->errorResponse('Ha ocurrido un error al intentar borrar una contrato', $e->getMessage());
         }
     }
 }
