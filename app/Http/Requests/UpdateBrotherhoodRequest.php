@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BrotherhoodRequest extends FormRequest
+class UpdateBrotherhoodRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,11 +22,11 @@ class BrotherhoodRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
-            'office' => 'required|string|max:255',
-            'phone_number' => 'nullable|string|max:20',
-            'email' => 'nullable|email|unique:brotherhoods,email|max:255',
+            'name' => ['required', 'string', 'max:255'],
+            'city' => ['required', 'string', 'max:255'],
+            'office' => ['required', 'string', 'max:255'],
+            'phone_number' => ['nullable', 'string', 'max:20'],
+            'email' => ['nullable', 'email', 'max:255'],
         ];
     }
 
@@ -35,9 +35,8 @@ class BrotherhoodRequest extends FormRequest
         return [
             'name.required' => 'El nombre de la hermandad es obligatorio.',
             'city.required' => 'La ciudad es obligatoria.',
-            'office.required' => 'La oficina es obligatoria.',
-            'email.email' => 'El email debe ser válido.',
-            'email.unique' => 'Ya existe una hermandad con ese email.',
+            'office.required' => 'El cargo u oficina es obligatorio.',
+            'email.email' => 'Debe ser un correo electrónico válido.',
         ];
     }
 }

@@ -13,6 +13,6 @@ class ProcessionSeeder extends Seeder
      */
     public function run(): void
     {
-        Procession::factory(5)->create();
+        Procession::factory(20)->create();
     }
 }

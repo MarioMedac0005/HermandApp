@@ -3,11 +3,12 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
@@ -66,5 +67,21 @@ class User extends Authenticatable
     public function brotherhood(): BelongsTo
     {
         return $this->belongsTo(Brotherhood::class);
+    }
+
+    /**
+     * Mutator para el atributo "password".
+     *
+     * Cada vez que se asigne un valor al campo "password" del modelo,
+     * Laravel ejecutará automáticamente este método antes de guardar en la base de datos.
+     * Esto asegura que la contraseña siempre se guarde en forma de hash seguro.
+     *
+     * @param string $value La contraseña en texto plano
+     */
+    protected function setPasswordAttribute($value)
+    {
+        if ($value) {
+            $this->attributes['password'] = Hash::make($value);
+        }
     }
 }
