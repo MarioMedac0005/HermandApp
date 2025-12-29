@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\ProcessionController;
 use App\Http\Controllers\Api\BrotherhoodController;
 use App\Http\Controllers\Api\AvailabilityController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\MediaController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -24,3 +25,8 @@ Route::apiresource('availabilities', AvailabilityController::class);
 
 
 
+
+Route::apiResource('media', MediaController::class)
+    ->parameters([
+        'media' => 'media'
+    ]);
