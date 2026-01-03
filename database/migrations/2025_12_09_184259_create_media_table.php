@@ -16,7 +16,7 @@ return new class extends Migration
             $table->morphs('model'); // model_id + model_type
             $table->string('path');
             $table->string('mime_type')->nullable();
-            $table->string('category')->nullable(); // perfil, banner, galeria, blog, etc.
+            $table->string('category'); // perfil, banner, galeria, blog, etc.
             $table->timestamps();
             $table->softDeletes();
         });

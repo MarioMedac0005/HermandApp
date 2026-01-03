@@ -21,7 +21,7 @@ class MediaResource extends JsonResource
             'category'   => $this->category,
             'mime_type'  => $this->mime_type,
             'path'       => $this->path,
-            'url'        => $this->path ? asset('storage/' . $this->path) : null,
+            'url'        => $this->url,
             'created_at' => $this->created_at?->toDateTimeString(),
             'updated_at' => $this->updated_at?->toDateTimeString(),
         ];

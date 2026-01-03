@@ -3,12 +3,13 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\BandController;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\MediaController;
 use App\Http\Controllers\Api\ContractController;
+use App\Http\Controllers\Api\FeaturedController;
 use App\Http\Controllers\Api\ProcessionController;
 use App\Http\Controllers\Api\BrotherhoodController;
 use App\Http\Controllers\Api\AvailabilityController;
-use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\Api\MediaController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -20,13 +21,10 @@ Route::apiResource('brotherhoods', BrotherhoodController::class);
 Route::apiresource('contracts', ContractController::class);
 Route::apiresource('processions', ProcessionController::class);
 Route::apiresource('availabilities', AvailabilityController::class);
-
-
-
-
-
-
 Route::apiResource('media', MediaController::class)
     ->parameters([
         'media' => 'media'
     ]);
+
+// Endpoint para los perfiles destacados de la Landing Page
+Route::get('featured', [FeaturedController::class, 'index']);
