@@ -15,7 +15,7 @@ class SearchController extends Controller
             $results = collect();
             $countries = ['Almeria', 'Cadiz', 'Cordoba', 'Granada', 'Huelva', 'Jaen', 'Malaga', 'Sevilla'];
 
-            $searchTerm = $request->input('search-bar', '');
+            $searchTerm = $request->input('resultado', '');
             $province = $request->has('provincia') ? ucfirst(strtolower($request->provincia)) : null;
             $filter = $province && in_array($province, $countries);
 
