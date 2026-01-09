@@ -16,7 +16,6 @@ class UserController extends Controller
     public function index()
     {
         try {
-
             $user = User::paginate(10);
 
             return UserResource::collection($user)
@@ -27,11 +26,7 @@ class UserController extends Controller
                 ->response()
                 ->setStatusCode(200);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Ha ocurrido un error al obtener el listado de usuarios',
-                'error' => $e->getMessage(),
-            ], 500);
+            return $this->errorResponse('Ha ocurrido un error al obtener el listado de usuarios', $e->getMessage());
         }
     }
 
@@ -41,7 +36,6 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         try {
-
             $user = User::create($request->validated());
 
             return (new UserResource($user))
@@ -52,11 +46,7 @@ class UserController extends Controller
                 ->response()
                 ->setStatusCode(201);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Ha ocurrido un error al intentar crear un usuario',
-                'error' => $e->getMessage(),
-            ], 500);
+            return $this->errorResponse('Ha ocurrido un error al intentar crear un usuario', $e->getMessage());
         }
     }
 
@@ -66,7 +56,6 @@ class UserController extends Controller
     public function show(User $user)
     {
         try {
-
             return (new UserResource($user))
                 ->additional([
                     'success' => true,
@@ -75,11 +64,7 @@ class UserController extends Controller
                 ->response()
                 ->setStatusCode(200);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Ha ocurrido un error al intentar mostrar un usuario',
-                'error' => $e->getMessage(),
-            ], 500);
+            return $this->errorResponse('Ha ocurrido un error al intentar mostrar un usuario', $e->getMessage());
         }
     }
 
@@ -89,7 +74,6 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user)
     {
         try {
-
             $user->update($request->validated());
 
             return (new UserResource($user))
@@ -100,11 +84,7 @@ class UserController extends Controller
                 ->response()
                 ->setStatusCode(200);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Ha ocurrido un error al intentar actualizar un usuario',
-                'error' => $e->getMessage(),
-            ], 500);
+            return $this->errorResponse('Ha ocurrido un error al intentar actualizar un usuario', $e->getMessage());
         }
     }
 
@@ -114,7 +94,6 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         try {
-
             $user->delete();
 
             return response()->json([
@@ -122,11 +101,7 @@ class UserController extends Controller
                 'message' => 'El usuario ha sido eliminado correctamente',
             ], 200);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Ha ocurrido un error al intentar borrar un usuario',
-                'error' => $e->getMessage(),
-            ], 500);
+            return $this->errorResponse('Ha ocurrido un error al intentar borrar un usuario', $e->getMessage());
         }
     }
 }

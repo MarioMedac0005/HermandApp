@@ -27,11 +27,7 @@ class BrotherhoodController extends Controller
                 ->response()
                 ->setStatusCode(200);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Ha ocurrido un error al obtener el listado de hermandades',
-                'error' => $e->getMessage(),
-            ], 500);
+            return $this->errorResponse('Ha ocurrido un error al obtener el listado de hermandades', $e->getMessage());
         }
     }
 
@@ -52,11 +48,7 @@ class BrotherhoodController extends Controller
                 ->response()
                 ->setStatusCode(201);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Ha ocurrido un error al intentar crear una hermandad',
-                'error' => $e->getMessage(),
-            ], 500);
+            return $this->errorResponse('Ha ocurrido un error al intentar crear una hermandad', $e->getMessage());
         }
     }
 
@@ -75,11 +67,7 @@ class BrotherhoodController extends Controller
                 ->response()
                 ->setStatusCode(200);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Ha ocurrido un error al intentar mostrar una hermandad',
-                'error' => $e->getMessage(),
-            ], 500);
+            return $this->errorResponse('Ha ocurrido un error al intentar mostrar una hermandad', $e->getMessage());
         }
     }
 
@@ -100,11 +88,7 @@ class BrotherhoodController extends Controller
                 ->response()
                 ->setStatusCode(200);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Ha ocurrido un error al intentar actualizar una hermandad',
-                'error' => $e->getMessage(),
-            ], 500);
+            return $this->errorResponse('Ha ocurrido un error al intentar actualizar una hermandad', $e->getMessage());
         }
     }
 
@@ -122,11 +106,7 @@ class BrotherhoodController extends Controller
                 'message' => 'La hermandad ha sido eliminada correctamente',
             ], 200);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Ha ocurrido un error al intentar borrar una hermandad',
-                'error' => $e->getMessage(),
-            ], 500);
+            return $this->errorResponse('Ha ocurrido un error al intentar borrar una hermandad', $e->getMessage());
         }
     }
 }

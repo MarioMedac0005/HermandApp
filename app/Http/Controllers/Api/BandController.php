@@ -34,11 +34,7 @@ class BandController extends Controller
                 ->response()
                 ->setStatusCode(200);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Ha ocurrido un error al obtener el listado de bandas',
-                'error' => $e->getMessage(),
-            ], 500);
+            return $this->errorResponse('Ha ocurrido un error al obtener el listado de bandas', $e->getMessage());
         }
     }
 
@@ -60,11 +56,7 @@ class BandController extends Controller
                 ->response()
                 ->setStatusCode(201);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Ha ocurrido un error al intentar crear una banda',
-                'error' => $e->getMessage(),
-            ], 500);
+            return $this->errorResponse('Ha ocurrido un error al intentar crear una banda', $e->getMessage());
         }
     }
 
@@ -83,11 +75,7 @@ class BandController extends Controller
                 ->response()
                 ->setStatusCode(200);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Ha ocurrido un error al intentar mostrar una banda',
-                'error' => $e->getMessage(),
-            ], 500);
+            return $this->errorResponse('Ha ocurrido un error al intentar mostrar una banda', $e->getMessage());
         }
     }
 
@@ -108,11 +96,7 @@ class BandController extends Controller
                 ->response()
                 ->setStatusCode(200);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Ha ocurrido un error al intentar crear una banda',
-                'error' => $e->getMessage(),
-            ], 500);
+            return $this->errorResponse('Ha ocurrido un error al intentar crear una banda', $e->getMessage());
         }
     }
 
@@ -131,12 +115,7 @@ class BandController extends Controller
                 'message' => 'La banda ha sido eliminada correctamente',
             ], 200);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Ha ocurrido un error al intentar borrar una banda',
-                'error' => $e->getMessage(),
-            ], 500);
-
+            return $this->errorResponse('Ha ocurrido un error al intentar borrar una banda', $e->getMessage());
         }
     }
 }

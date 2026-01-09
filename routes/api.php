@@ -10,10 +10,8 @@ use App\Http\Controllers\Api\FeaturedController;
 use App\Http\Controllers\Api\ProcessionController;
 use App\Http\Controllers\Api\BrotherhoodController;
 use App\Http\Controllers\Api\AvailabilityController;
-
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\SearchController;
 
 Route::apiResource('users', UserController::class);
 Route::apiResource('bands', BandController::class);
@@ -28,3 +26,5 @@ Route::apiResource('media', MediaController::class)
 
 // Endpoint para los perfiles destacados de la Landing Page
 Route::get('featured', [FeaturedController::class, 'index']);
+Route::get('/search', [SearchController::class, 'index'])->name('search');
+Route::get('/dashboard/count', [DashboardController::class, 'count'])->name('count');

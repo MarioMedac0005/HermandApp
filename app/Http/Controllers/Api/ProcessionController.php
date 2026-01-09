@@ -15,9 +15,7 @@ class ProcessionController extends Controller
      */
     public function index()
     {
-
         try {
-
             $processions = Procession::paginate(10);
 
             return ProcessionResource::collection($processions)
@@ -27,14 +25,8 @@ class ProcessionController extends Controller
                 ])
                 ->response()
                 ->setStatusCode(200);
-
         } catch (\Exception $e) {
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Ha ocurrido un error al obtener el listado de procesiones',
-                'error' => $e->getMessage(),
-            ], 500);
+            return $this->errorResponse('Ha ocurrido un error al obtener el listado de procesiones', $e->getMessage());
         }
     }
 
@@ -43,9 +35,7 @@ class ProcessionController extends Controller
      */
     public function store(StoreProcessionRequest $request)
     {
-
         try {
-
             $procession = Procession::create($request->validated());
 
             return (new ProcessionResource($procession))
@@ -56,11 +46,7 @@ class ProcessionController extends Controller
                 ->response()
                 ->setStatusCode(201);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Ha ocurrido un error al intentar crear una procesion',
-                'error' => $e->getMessage(),
-            ], 500);
+            return $this->errorResponse('Ha ocurrido un error al intentar crear una procesion', $e->getMessage());
         }
     }
 
@@ -69,9 +55,7 @@ class ProcessionController extends Controller
      */
     public function show(Procession $procession)
     {
-
         try {
-
             return (new ProcessionResource($procession))
                 ->additional([
                     'success' => true,
@@ -80,11 +64,7 @@ class ProcessionController extends Controller
                 ->response()
                 ->setStatusCode(200);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Ha ocurrido un error al intentar mostrar una banda',
-                'error' => $e->getMessage(),
-            ], 500);
+            return $this->errorResponse('Ha ocurrido un error al intentar mostrar una banda', $e->getMessage());
         }
     }
 
@@ -93,9 +73,7 @@ class ProcessionController extends Controller
      */
     public function update(UpdateProcessionRequest $request, Procession $procession)
     {
-
         try {
-
             $procession->update($request->validated());
 
             return (new ProcessionResource($procession))
@@ -106,12 +84,7 @@ class ProcessionController extends Controller
                 ->response()
                 ->setStatusCode(200);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Ha ocurrido un error al intentar actualizar una procesión',
-                'error' => $e->getMessage(),
-            ], 500);
-
+            return $this->errorResponse('Ha ocurrido un error al intentar actualizar una procesión', $e->getMessage());
         }
     }
 
@@ -120,9 +93,7 @@ class ProcessionController extends Controller
      */
     public function destroy(Procession $procession)
     {
-
         try {
-
             $procession->delete();
 
             return response()->json([
@@ -130,12 +101,7 @@ class ProcessionController extends Controller
                 'message' => 'La procesión ha sido eliminada correctamente',
             ], 200);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Ha ocurrido un error al intentar borrar una procesión',
-                'error' => $e->getMessage(),
-            ], 500);
-
+            return $this->errorResponse('Ha ocurrido un error al intentar borrar una procesión', $e->getMessage());
         }
     }
 }
