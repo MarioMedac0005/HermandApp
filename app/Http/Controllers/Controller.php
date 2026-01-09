@@ -29,12 +29,12 @@ abstract class Controller
      * @param string $message Mensaje de error general
      * @return \Illuminate\Http\JsonResponse Respuesta JSON de error
      */
-    protected function errorResponse(string $error, string $message): JsonResponse
+    protected function errorResponse(string $error, string $details): JsonResponse
     {
         return response()->json([
-            'success' => true,
-            'message' => 'Ha ocurrido un error al obtener los resultados de la busqueda',
-            'error' => $error
+            'success' => false,
+            'error' => $error,
+            'details' => $details
         ], 500);
     }
 }

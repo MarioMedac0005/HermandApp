@@ -23,7 +23,7 @@ class StoreBandRequest extends FormRequest
     {
         return [
             'name' => 'required|string|unique:bands,name|max:255',
-            'city' => 'nullable|string|max:255',
+            'country' => 'nullable|string|max:255',
             'rehearsal_space' => 'nullable|string|max:255',
             'email' => 'required|email|unique:bands,email|max:255',
         ];
