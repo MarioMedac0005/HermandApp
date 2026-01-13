@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('bands', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->string('city')->nullable();
+            $table->enum('country', ['Almeria', 'Cadiz', 'Cordoba', 'Granada', 'Huelva', 'Jaen', 'Malaga', 'Sevilla'])->nullable();
             $table->string('rehearsal_space')->nullable();
             $table->string('email')->unique();
             $table->timestamps();

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BandRequest extends FormRequest
+class StoreBandRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,7 +23,7 @@ class BandRequest extends FormRequest
     {
         return [
             'name' => 'required|string|unique:bands,name|max:255',
-            'city' => 'nullable|string|max:255',
+            'country' => 'nullable|string|max:255',
             'rehearsal_space' => 'nullable|string|max:255',
             'email' => 'required|email|unique:bands,email|max:255',
         ];

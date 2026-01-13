@@ -4,6 +4,14 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\BandController;
+use App\Http\Controllers\Api\ContractController;
+use App\Http\Controllers\Api\ProcessionController;
+use App\Http\Controllers\Api\BrotherhoodController;
+use App\Http\Controllers\Api\AvailabilityController;
+use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\SearchController;
+use App\Http\Controllers\Api\UserController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -15,3 +23,12 @@ Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:sanct
 
 Route::post('/password/forgot', [ResetPasswordController::class, 'sendResetLink']);
 Route::post('/password/reset', [ResetPasswordController::class, 'resetPassword']);
+Route::apiResource('users', UserController::class);
+Route::apiResource('bands', BandController::class);
+Route::apiResource('brotherhoods', BrotherhoodController::class);
+Route::apiresource('contracts', ContractController::class);
+Route::apiresource('processions', ProcessionController::class);
+Route::apiresource('availabilities', AvailabilityController::class);
+
+Route::get('/search', [SearchController::class, 'index'])->name('search');
+Route::get('/dashboard/count', [DashboardController::class, 'count'])->name('count');
