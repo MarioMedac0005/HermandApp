@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
             AvailabilitySeeder::class,
             ProcessionSeeder::class,
             ContractSeeder::class,
+            MediaSeeder::class,
         ]);
     }
 }
