@@ -13,22 +13,22 @@ use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\UserController;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::post('/register', [AuthController::class, 'register']); // Ruta para registrarse un usuario. PENDIENTE PARA SABER SI LA USAREMOS
+Route::post('/login', [AuthController::class, 'login']); // Ruta para loguearse un usuario que tenga el rol banda o hermanda.
 
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
-Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+Route::post('/password/forgot', [ResetPasswordController::class, 'sendResetLink']); // Pendiente para saber si la usaremos o no
+Route::post('/password/reset', [ResetPasswordController::class, 'resetPassword']); // Pendiente para saber si la usaremos o no
+Route::apiResource('bands', BandController::class); // Ruta para los CRUDS
+Route::apiResource('brotherhoods', BrotherhoodController::class); // Ruta para los CRUDS
+Route::apiresource('processions', ProcessionController::class); // Ruta para los CRUDS
+Route::apiresource('availabilities', AvailabilityController::class); // Ruta para los CRUDS
 
-Route::post('/password/forgot', [ResetPasswordController::class, 'sendResetLink']);
-Route::post('/password/reset', [ResetPasswordController::class, 'resetPassword']);
-Route::apiResource('users', UserController::class);
-Route::apiResource('bands', BandController::class);
-Route::apiResource('brotherhoods', BrotherhoodController::class);
-Route::apiresource('contracts', ContractController::class);
-Route::apiresource('processions', ProcessionController::class);
-Route::apiresource('availabilities', AvailabilityController::class);
+Route::get('/search', [SearchController::class, 'index'])->name('search'); // Ruta publica para poder buscar bandas y hermandades.
 
-Route::get('/search', [SearchController::class, 'index'])->name('search');
-Route::get('/dashboard/count', [DashboardController::class, 'count'])->name('count');
+// Una vez creado los roles, crear los grupos para los diferentes roles, este es un ejemplo.
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/logout', [AuthController::class, 'logout']); // El usuario debe estar autenticado previamente.
+    Route::apiResource('users', UserController::class); // El usuario debe de estar autenticado y tener el rol admin.
+    Route::apiresource('contracts', ContractController::class); // El usuario debe estar autenticado y tener el rol de banda / hermandad.
+    Route::get('/dashboard/count', [DashboardController::class, 'count'])->name('count'); // El usuario debe estar autenticado y tener el rol admin.
+});
