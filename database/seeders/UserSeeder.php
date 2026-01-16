@@ -22,7 +22,6 @@ class UserSeeder extends Seeder
             'surname' => 'Ortiz Hidalgo',
             'email' => 'mario@gmail.medac.com',
             'password' => Hash::make('1234'),
-            'type' => 'band_admin',
             'band_id' => Band::all()->random()->id,
             'brotherhood_id' => Brotherhood::all()->random()->id
 
@@ -34,7 +33,6 @@ class UserSeeder extends Seeder
             'surname' => 'Romero Conde',
             'email' => 'iraida@gmail.medac.com',
             'password' => Hash::make('1234'),
-            'type' => 'brotherhood_admin',
             'band_id' => Band::all()->random()->id,
             'brotherhood_id' => Brotherhood::all()->random()->id
 
@@ -46,7 +44,6 @@ class UserSeeder extends Seeder
             'surname' => 'Carmona Aguayo ',
             'email' => 'alfonso@gmail.medac.com',
             'password' => Hash::make('1234'),
-            'type' => 'guest',
             'band_id' => Band::all()->random()->id,
             'brotherhood_id' => Brotherhood::all()->random()->id
 
@@ -58,7 +55,6 @@ class UserSeeder extends Seeder
             'surname' => 'Martínez de la Torre ',
             'email' => 'gonzalo@gmail.medac.com',
             'password' => Hash::make('1234'),
-            'type' => 'guest',
             'band_id' => Band::all()->random()->id,
             'brotherhood_id' => Brotherhood::all()->random()->id
 

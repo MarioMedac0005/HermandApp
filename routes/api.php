@@ -26,9 +26,10 @@ Route::apiresource('availabilities', AvailabilityController::class); // Ruta par
 Route::get('/search', [SearchController::class, 'index'])->name('search'); // Ruta publica para poder buscar bandas y hermandades.
 
 // Una vez creado los roles, crear los grupos para los diferentes roles, este es un ejemplo.
-Route::middleware('auth:sanctum')->group(function () {
+// Route::middleware('auth:sanctum')->group(function () {
     Route::get('/logout', [AuthController::class, 'logout']); // El usuario debe estar autenticado previamente.
     Route::apiResource('users', UserController::class); // El usuario debe de estar autenticado y tener el rol admin.
     Route::apiresource('contracts', ContractController::class); // El usuario debe estar autenticado y tener el rol de banda / hermandad.
     Route::get('/dashboard/count', [DashboardController::class, 'count'])->name('count'); // El usuario debe estar autenticado y tener el rol admin.
-});
+    Route::post('/gestor', [AuthController::class, 'addGestor']);
+// });
