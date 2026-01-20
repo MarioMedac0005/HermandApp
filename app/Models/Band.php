@@ -14,6 +14,7 @@ class Band extends Model
 
     protected $fillable = [
         'name',
+        'description',
         'city',
         'rehearsal_space',
         'email'

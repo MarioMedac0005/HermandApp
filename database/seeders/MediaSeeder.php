@@ -9,73 +9,119 @@ use Illuminate\Database\Seeder;
 
 class MediaSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // Definimos las imágenes para hermandades y bandas
         $hermandadImagenes = [
-            'fotoHermandad01.jpg',
-            'fotoHermandad02.jpg',
-            'fotoHermandad03.jpg',
-            'fotoHermandad04.jpg',
+            'banner' => [
+                'fotoHermandad01.jpg',
+                'fotoHermandad02.jpg',
+                'fotoHermandad03.jpg',
+                'fotoHermandad04.jpg',
+            ],
+            'profile' => [
+                'profileHermandad01.jpg',
+                'profileHermandad02.jpg',
+                'profileHermandad03.jpg',
+                'profileHermandad04.jpg',
+            ],
+            'gallery' => [
+                'galleryHermandad01.jpg',
+                'galleryHermandad02.jpg',
+                'galleryHermandad03.jpg',
+            ],
         ];
 
         $bandaImagenes = [
-            'fotoBanda01.jpeg',
-            'fotoBanda02.jpg',
-            'fotoBanda03.jpg',
-            'fotoBanda04.jpg',
+            'banner' => [
+                'fotoBanda01.jpeg',
+                'fotoBanda02.jpg',
+                'fotoBanda03.jpg',
+                'fotoBanda04.jpg',
+            ],
+            'profile' => [
+                'profileBanda01.png',
+                'profileBanda02.jpg',
+                'profileBanda03.jpg',
+                'profileBanda04.jpg',
+            ],
+            'gallery' => [
+                'galleryBanda01.webp',
+                'galleryBanda02.jpg',
+                'galleryBanda03.jpg',
+            ],
         ];
 
-        // Asignar una imagen a cada hermandad
-        $this->createMediaForModel(Brotherhood::all(), $hermandadImagenes, 'brotherhoods');
+        $this->createMediaForModel(
+            Brotherhood::all(),
+            $hermandadImagenes,
+            Brotherhood::class,
+            'brotherhoods'
+        );
 
-        // Asignar una imagen a cada banda
-        $this->createMediaForModel(Band::all(), $bandaImagenes, 'bands');
+        $this->createMediaForModel(
+            Band::all(),
+            $bandaImagenes,
+            Band::class,
+            'bands'
+        );
     }
 
-    /**
-     * Método general para crear los medios para cualquier modelo.
-     */
-    private function createMediaForModel($modelCollection, $imagenes, $modelType)
+    private function createMediaForModel($models, $imagenesPorCategoria, $modelClass, $basePath)
     {
-        $category = 'banner';
-        $index = 0;  // Para controlar el índice de las imágenes
+        $modelIndex = 0;
 
-        foreach ($modelCollection as $model) {
-            // Asignar una imagen a cada modelo
-            Media::create([
-                'model_id' => $model->id,
-                'model_type' => $modelType === 'brotherhoods' ? Brotherhood::class : Band::class,
-                'path' => $modelType . '/' . ($index + 1) . '/' . $category . '/' . $imagenes[$index],
-                'mime_type' => $this->getMimeType($imagenes[$index]),
-                'category' => $category,
-            ]);
+        foreach ($models as $model) {
+            foreach ($imagenesPorCategoria as $category => $imagenes) {
 
-            // Aseguramos que el índice no se pase del número de imágenes disponibles
-            $index = ($index + 1) % count($imagenes);
+                // Banner y profile → solo 1 imagen
+                if (in_array($category, ['banner', 'profile'])) {
+                    $imagen = $imagenes[$modelIndex % count($imagenes)];
+
+                    $this->createMedia(
+                        $model,
+                        $modelClass,
+                        $basePath,
+                        $category,
+                        $imagen
+                    );
+                }
+
+                // Gallery → múltiples imágenes
+                if ($category === 'gallery') {
+                    foreach ($imagenes as $imagen) {
+                        $this->createMedia(
+                            $model,
+                            $modelClass,
+                            $basePath,
+                            $category,
+                            $imagen
+                        );
+                    }
+                }
+            }
+
+            $modelIndex++;
         }
     }
 
-    /**
-     * Obtener el mime type según la extensión del archivo
-     */
+    private function createMedia($model, $modelClass, $basePath, $category, $imagen)
+    {
+        Media::create([
+            'model_id'   => $model->id,
+            'model_type' => $modelClass,
+            'path'       => "{$basePath}/{$model->id}/{$category}/{$imagen}",
+            'mime_type'  => $this->getMimeType($imagen),
+            'category'   => $category,
+        ]);
+    }
+
     private function getMimeType($imagen)
     {
-        $extension = pathinfo($imagen, PATHINFO_EXTENSION);
-
-        switch ($extension) {
-            case 'jpg':
-            case 'jpeg':
-                return 'image/jpeg';
-            case 'webp':
-                return 'image/webp';
-            case 'png':
-                return 'image/png';
-            default:
-                return 'application/octet-stream';
-        }
+        return match (pathinfo($imagen, PATHINFO_EXTENSION)) {
+            'jpg', 'jpeg' => 'image/jpeg',
+            'png'         => 'image/png',
+            'webp'        => 'image/webp',
+            default       => 'application/octet-stream',
+        };
     }
 }

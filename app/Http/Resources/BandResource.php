@@ -17,6 +17,7 @@ class BandResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'description' => $this->description,
             'city' => $this->city,
             'rehearsal_space' => $this->rehearsal_space,
             'email' => $this->email,
@@ -28,6 +29,10 @@ class BandResource extends JsonResource
             // No se incluye 'deleted_at' porque normalmente no se muestra en la API
             // Si $this->created_at tiene valor, llama a toDateTimeString().
             // Si $this->created_at es null, simplemente devuelve null (sin error).
+
+            'media' => MediaResource::collection(
+                $this->whenLoaded('media')
+            ),
         ];
     }
 }
