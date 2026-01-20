@@ -15,36 +15,73 @@ use App\Http\Controllers\Api\AvailabilityController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\SearchController;
 
-Route::post('/register', [AuthController::class, 'register']); // Ruta para registrarse un usuario. PENDIENTE PARA SABER SI LA USAREMOS
-Route::post('/login', [AuthController::class, 'login']); // Ruta para loguearse un usuario que tenga el rol banda o hermanda.
+/*
+|--------------------------------------------------------------------------
+| Rutas Públicas
+|--------------------------------------------------------------------------
+|
+| Estas rutas son visibles para todos los usuarios. No se requiere login.
+| Permiten ver información de bandas, hermandades, procesiones y demás.
+|
+*/
 
-Route::post('/password/forgot', [ResetPasswordController::class, 'sendResetLink']); // Pendiente para saber si la usaremos o no
-Route::post('/password/reset', [ResetPasswordController::class, 'resetPassword']); // Pendiente para saber si la usaremos o no
-Route::apiResource('bands', BandController::class); // Ruta para los CRUDS
-Route::apiResource('brotherhoods', BrotherhoodController::class); // Ruta para los CRUDS
-Route::apiresource('processions', ProcessionController::class); // Ruta para los CRUDS
-Route::apiresource('availabilities', AvailabilityController::class); // Ruta para los CRUDS
+Route::post('/login', [AuthController::class, 'login']);
+Route::get('/search', [SearchController::class, 'index']);
+Route::get('featured', [FeaturedController::class, 'index']);
 
-Route::get('/search', [SearchController::class, 'index'])->name('search'); // Ruta publica para poder buscar bandas y hermandades.
+// Rutas públicas de lectura
+Route::apiResource('bands', BandController::class)->only(['index', 'show']);
+Route::apiResource('brotherhoods', BrotherhoodController::class)->only(['index', 'show']);
+Route::apiResource('processions', ProcessionController::class)->only(['index', 'show']);
+Route::apiResource('availabilities', AvailabilityController::class)->only(['index', 'show']);
 
-// Una vez creado los roles, crear los grupos para los diferentes roles, este es un ejemplo.
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/logout', [AuthController::class, 'logout']); // El usuario debe estar autenticado previamente.
-    Route::apiResource('users', UserController::class); // El usuario debe de estar autenticado y tener el rol admin.
-    Route::apiresource('contracts', ContractController::class); // El usuario debe estar autenticado y tener el rol de banda / hermandad.
-    Route::get('/dashboard/count', [DashboardController::class, 'count'])->name('count'); // El usuario debe estar autenticado y tener el rol admin.
-});
+/* Route::post('/password/forgot', [ResetPasswordController::class, 'sendResetLink']); // Pendiente para saber si la usaremos o no
+Route::post('/password/reset', [ResetPasswordController::class, 'resetPassword']); // Pendiente para saber si la usaremos o no */
+    
+/*
+|--------------------------------------------------------------------------
+| Rutas para usuarios autenticados (Gestor)
+|--------------------------------------------------------------------------
+|
+| Estas rutas requieren autenticación y rol de gestor.
+| Permiten crear, editar y eliminar contenido que verá el público.
+|
+*/
+Route::middleware(['auth:sanctum', 'role:gestor|admin'])->group(function () {
 
-Route::apiResource('users', UserController::class);
-Route::apiResource('bands', BandController::class);
-Route::apiResource('brotherhoods', BrotherhoodController::class);
-Route::apiresource('contracts', ContractController::class);
-Route::apiresource('processions', ProcessionController::class);
-Route::apiresource('availabilities', AvailabilityController::class);
-Route::apiResource('media', MediaController::class)
-    ->parameters([
+    // CRUD completo excepto index/show (ya son públicos)
+    Route::apiResource('bands', BandController::class)->except(['index', 'show']);
+    Route::apiResource('brotherhoods', BrotherhoodController::class)->except(['index', 'show']);
+    Route::apiResource('processions', ProcessionController::class)->except(['index', 'show']);
+    Route::apiResource('availabilities', AvailabilityController::class)->except(['index', 'show']);
+
+    Route::apiResource('media', MediaController::class)->parameters([
         'media' => 'media'
     ]);
+    
+    Route::apiresource('contracts', ContractController::class);
+});
 
-// Endpoint para los perfiles destacados de la Landing Page
-Route::get('featured', [FeaturedController::class, 'index']);
+/*
+|--------------------------------------------------------------------------
+| Rutas para usuarios autenticados 
+|--------------------------------------------------------------------------
+*/
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+});
+
+/*
+|--------------------------------------------------------------------------
+| Rutas para Admin
+|--------------------------------------------------------------------------
+|
+| Solo accesibles para usuarios con rol admin.
+| Gestionan usuarios, roles y estadísticas.
+|
+*/
+Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
+    Route::apiResource('users', UserController::class);
+    Route::get('/dashboard/count', [DashboardController::class, 'count']);
+    Route::post('/gestor', [AuthController::class, 'addGestor']);
+});
