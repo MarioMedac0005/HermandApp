@@ -47,7 +47,7 @@ Route::post('/password/reset', [ResetPasswordController::class, 'resetPassword']
 | Permiten crear, editar y eliminar contenido que verá el público.
 |
 */
-Route::middleware(['auth:sanctum', 'role:gestor'])->group(function () {
+Route::middleware(['auth:sanctum', 'role:gestor|admin'])->group(function () {
 
     // CRUD completo excepto index/show (ya son públicos)
     Route::apiResource('bands', BandController::class)->except(['index', 'show']);
