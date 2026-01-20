@@ -19,7 +19,9 @@ class BandFactory extends Factory
 
         return [
             'name' => 'Banda' . fake()->unique()->company(),
-            'country' => fake()->randomElement(['Almeria', 'Cadiz', 'Cordoba', 'Granada', 'Huelva', 'Jaen', 'Malaga', 'Sevilla']),            'rehearsal_space' => fake()->streetAddress(),
+            'description' => fake()->text(),
+            'city' => fake()->randomElement(['Almeria', 'Cadiz', 'Cordoba', 'Granada', 'Huelva', 'Jaen', 'Malaga', 'Sevilla']),
+            'rehearsal_space' => fake()->streetAddress(),
             'email' => fake()->unique()->safeEmail()
         ];
     }

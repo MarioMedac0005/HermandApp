@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreBandRequest extends FormRequest
 {
@@ -23,7 +24,8 @@ class StoreBandRequest extends FormRequest
     {
         return [
             'name' => 'required|string|unique:bands,name|max:255',
-            'country' => 'nullable|string|max:255',
+            'description' => 'nullable|string|max:2000',
+            'city' => 'nullable|string|max:255', Rule::in(['Almería', 'Cádiz', 'Córdoba', 'Granada', 'Huelva', 'Jaén', 'Málaga', 'Sevilla', 'Ceuta', 'Melilla']),
             'rehearsal_space' => 'nullable|string|max:255',
             'email' => 'required|email|unique:bands,email|max:255',
         ];
@@ -34,9 +36,22 @@ class StoreBandRequest extends FormRequest
         return [
             'name.required' => 'El nombre de la banda es obligatorio.',
             'name.unique' => 'Ya existe una banda con ese nombre.',
+            'name.max' => 'El nombre de la banda no puede tener más de 255 caracteres.',
+
+            'description.string' => 'La descripción debe ser una cadena de texto.',
+            'description.max' => 'La descripción no puede tener más de 2000 caracteres.',
+
+            'city.string' => 'La ciudad debe ser una cadena de texto.',
+            'city.max' => 'El nombre de la ciudad no puede tener más de 255 caracteres.',
+            'city.in' => 'La ciudad debe ser una de las siguientes: Almería, Cádiz, Córdoba, Granada, Huelva, Jaén, Málaga, Sevilla, Ceuta, Melilla.',
+
+            'rehearsal_space.string' => 'El espacio de ensayo debe ser una cadena de texto.',
+            'rehearsal_space.max' => 'El espacio de ensayo no puede tener más de 255 caracteres.',
+
             'email.required' => 'El email es obligatorio.',
             'email.email' => 'El email debe ser válido.',
             'email.unique' => 'Ya existe una banda con ese email.',
+            'email.max' => 'El email no puede tener más de 255 caracteres.',
         ];
     }
 }

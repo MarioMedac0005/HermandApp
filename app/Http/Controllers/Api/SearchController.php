@@ -56,7 +56,7 @@ class SearchController extends Controller
         $query = $model::where('name', 'like', "%{$search}%");
 
         if ($filter) {
-            $query = $query->where('country', $province);
+            $query = $query->where('city', $province);
         }
 
         return $query->get();

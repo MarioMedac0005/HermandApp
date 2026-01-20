@@ -11,16 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-     
         Schema::create('bands', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->enum('country', ['Almeria', 'Cadiz', 'Cordoba', 'Granada', 'Huelva', 'Jaen', 'Malaga', 'Sevilla'])->nullable();
+            $table->text('description')->nullable();
+            $table->enum('city', ['Almeria', 'Cadiz', 'Cordoba', 'Granada', 'Huelva', 'Jaen', 'Malaga', 'Sevilla'])->nullable();
             $table->string('rehearsal_space')->nullable();
             $table->string('email')->unique();
             $table->timestamps();
             $table->softDeletes();
-
         });
     }
 

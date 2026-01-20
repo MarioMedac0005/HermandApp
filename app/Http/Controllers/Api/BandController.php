@@ -17,9 +17,9 @@ class BandController extends Controller
     {
         try {
 
-            $band = Band::paginate(10);
+            $band = Band::with('media')->paginate(10);
 
-            /* 
+            /*
                 BandResource::collection -> ::collection es un metodo estatico de JsonResource
                 se utiliza para devolver una coleccion de datos del modelo.
                     ->additional: Permite agregar informacion adicional a la respuesta.
@@ -44,7 +44,7 @@ class BandController extends Controller
     public function store(StoreBandRequest $request)
     {
 
-        try {     
+        try {
 
             $band = Band::create($request->validated());
 
@@ -66,6 +66,7 @@ class BandController extends Controller
     public function show(Band $band)
     {
         try {
+            $band->load('media');
 
             return (new BandResource($band))
                 ->additional([
