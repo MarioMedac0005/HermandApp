@@ -22,12 +22,12 @@ class StoreContractRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'type' => 'required|in:christ,virgin',
-            'itinerary' => 'required|string',
-            'checkout_time' => 'required|date|before:checkin_time',
-            'checkin_time' => 'required|date|after:checkout_time',
-            'brotherhood_id' => 'required|exists:brotherhoods,id',
+        'date' => 'required|date',
+        'amount' => 'nullable|numeric|min:0',
+        'description' => 'nullable|string',
+        'band_id' => 'required|exists:bands,id',
+        'procession_id' => 'required|exists:processions,id',
+        // brotherhood_id NO lo pidas al cliente (lo forzamos en backend)
         ];
     }
 

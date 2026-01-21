@@ -41,3 +41,6 @@ Route::apiResource('media', MediaController::class)
 
 // Endpoint para los perfiles destacados de la Landing Page
 Route::get('featured', [FeaturedController::class, 'index']);
+
+Route::get('contracts/{contract}/accept', [ContractController::class, 'accept']);
+Route::get('contracts/{contract}/reject', [ContractController::class, 'reject']);

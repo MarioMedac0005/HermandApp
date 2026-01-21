@@ -18,7 +18,9 @@ class Contract extends Model
         'amount',
         'description',
         'band_id',
-        'procession_id'
+        'procession_id',
+        'brotherhood_id'
+        
     ];
     
     /**

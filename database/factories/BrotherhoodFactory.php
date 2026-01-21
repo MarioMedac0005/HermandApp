@@ -19,7 +19,7 @@ class BrotherhoodFactory extends Factory
         
         return [
             'name' => fake()->name(),
-            'country' => fake()->randomElement(['Almeria', 'Cadiz', 'Cordoba', 'Granada', 'Huelva', 'Jaen', 'Malaga', 'Sevilla']),
+            'city' => fake()->randomElement(['Almeria', 'Cadiz', 'Cordoba', 'Granada', 'Huelva', 'Jaen', 'Malaga', 'Sevilla']),
             'office' => fake()->address(),
             'phone_number' => fake()->phoneNumber(),
             'email' => fake()->email(),

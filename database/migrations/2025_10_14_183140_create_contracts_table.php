@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('description')->nullable(); 
             $table->foreignId('band_id')->constrained();
             $table->foreignId('procession_id')->constrained();
+            $table->foreignId('brotherhood_id')->constrained();
             $table->timestamps();
             $table->softDeletes();
         });
