@@ -92,24 +92,46 @@ class User extends Authenticatable
         return $this->morphOne(Media::class, 'model')->where('category', 'profile');
     }
 
-    /**
-     * Mutator para el atributo "password".
-     *
-     * Cada vez que se asigne un valor al campo "password" del modelo,
-     * Laravel ejecutará automáticamente este método antes de guardar en la base de datos.
-     * Esto asegura que la contraseña siempre se guarde en forma de hash seguro.
-     *
-     * @param string $value La contraseña en texto plano
-     */
-    protected function setPasswordAttribute($value)
-    {
-        if ($value) {
-            $this->attributes['password'] = Hash::make($value);
-        }
-    }
-
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new CustomResetPassword($token));
+    }
+
+    public function getNavbarAvatarAttribute(): string
+    {
+        // ADMIN → avatar por defecto
+        if ($this->hasRole('admin')) {
+            return 'https://ui-avatars.com/api/?name=Administrador&length=2&background=800080&color=ffff00&rounded=true';
+        }
+
+        // GESTOR DE BANDA
+        if ($this->band && $this->band->profileImage) {
+            return $this->band->profileImage->url;
+        }
+
+        // GESTOR DE HERMANDAD
+        if ($this->brotherhood && $this->brotherhood->profileImage) {
+            return $this->brotherhood->profileImage->url;
+        }
+
+        // Fallback de seguridad
+        return 'https://ui-avatars.com/api/?background=999&color=fff&rounded=true' . urlencode($this->name);
+    }
+
+    public function getNavbarOrganizationAttribute(): string
+    {
+        if ($this->hasRole('admin')) {
+            return 'Administrador';
+        }
+
+        if ($this->band) {
+            return $this->band->name;
+        }
+
+        if ($this->brotherhood) {
+            return $this->brotherhood->name;
+        }
+
+        return '—';
     }
 }
