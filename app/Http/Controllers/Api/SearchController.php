@@ -16,12 +16,12 @@ class SearchController extends Controller
             $q = $request->input('q');
             $city = $request->input('city');
             $type = $request->input('type');
-            $perPage = 1;
+            $perPage = 12;
 
             $results = collect();
 
             if (!$type || $type === 'band') {
-                $bands = Band::query()
+                $bands = Band::with('banner')
                     ->when($q, function ($query) use ($q) {
                         $query->where('name', 'like', "%{$q}%");
                     })
@@ -31,21 +31,22 @@ class SearchController extends Controller
                     ->get()
                     ->map(function ($band) {
                         return [
-                            'id' => $band->id,
-                            'name' => $band->name,
+                            'id'          => $band->id,
+                            'name'        => $band->name,
                             'description' => $band->description,
-                            'city' => $band->city,
-                            'email' => $band->email,
-                            'type' => 'band',
-                            'created_at' => $band->created_at,
+                            'city'        => $band->city,
+                            'email'       => $band->email,
+                            'type'        => 'band',
+                            'banner'      => $band->banner?->path ?? '/placeholder.jpg',
+                            'created_at'  => $band->created_at,
                         ];
                     });
 
                 $results = $results->merge($bands);
             }
 
-            if (!$type || $type === 'hermandad') {
-                $brotherhoods = Brotherhood::query()
+            if (!$type || $type === 'brotherhood') {
+                $brotherhoods = Brotherhood::with('banner')
                     ->when($q, function ($query) use ($q) {
                         $query->where('name', 'like', "%{$q}%");
                     })
@@ -55,18 +56,20 @@ class SearchController extends Controller
                     ->get()
                     ->map(function ($h) {
                         return [
-                            'id' => $h->id,
-                            'name' => $h->name,
+                            'id'          => $h->id,
+                            'name'        => $h->name,
                             'description' => $h->description,
-                            'city' => $h->city,
-                            'email' => $h->email,
-                            'type' => 'brotherhood',
-                            'created_at' => $h->created_at,
+                            'city'        => $h->city,
+                            'email'       => $h->email,
+                            'type'        => 'brotherhood',
+                            'banner'      => $h->banner?->path ?? '/placeholder.jpg',
+                            'created_at'  => $h->created_at,
                         ];
                     });
 
                 $results = $results->merge($brotherhoods);
             }
+
             $results = $results->sortByDesc('created_at')->values();
 
             $page = LengthAwarePaginator::resolveCurrentPage();
