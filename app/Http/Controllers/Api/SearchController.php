@@ -6,59 +6,91 @@ use App\Http\Controllers\Controller;
 use App\Models\Band;
 use App\Models\Brotherhood;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class SearchController extends Controller
 {
     public function index(Request $request)
     {
         try {
+            $q = $request->input('q');
+            $city = $request->input('city');
+            $type = $request->input('type');
+            $perPage = 1;
+
             $results = collect();
-            $countries = ['Almeria', 'Cadiz', 'Cordoba', 'Granada', 'Huelva', 'Jaen', 'Malaga', 'Sevilla'];
 
-            $searchTerm = $request->input('resultado', '');
-            $province = $request->has('provincia') ? ucfirst(strtolower($request->provincia)) : null;
-            $filter = $province && in_array($province, $countries);
+            if (!$type || $type === 'band') {
+                $bands = Band::query()
+                    ->when($q, function ($query) use ($q) {
+                        $query->where('name', 'like', "%{$q}%");
+                    })
+                    ->when($city, function ($query) use ($city) {
+                        $query->where('city', $city);
+                    })
+                    ->get()
+                    ->map(function ($band) {
+                        return [
+                            'id' => $band->id,
+                            'name' => $band->name,
+                            'description' => $band->description,
+                            'city' => $band->city,
+                            'email' => $band->email,
+                            'type' => 'band',
+                            'created_at' => $band->created_at,
+                        ];
+                    });
 
-            $searchType = [
-                'band' => Band::class,
-                'hermandad' => Brotherhood::class
-            ];
-
-            $type = $request->input('tipo');
-
-            if ($type && array_key_exists($type, $searchType)) {
-                $model = $searchType[$type];
-                $results = $this->search($model, $searchTerm, $filter, $province);
-            } else {
-                $brotherhoods = $this->search(Brotherhood::class, $searchTerm, $filter, $province);
-                $bands = $this->search(Band::class, $searchTerm, $filter, $province);
-
-                $results = $results->merge($brotherhoods)->merge($bands);
+                $results = $results->merge($bands);
             }
 
-            return $this->successResponse($results, 'Se han obtenido correctamente los resultados de la busqueda');
-        } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage(), 'Ha ocurrido un error al obtener los resultados de la busqueda');
+            if (!$type || $type === 'hermandad') {
+                $brotherhoods = Brotherhood::query()
+                    ->when($q, function ($query) use ($q) {
+                        $query->where('name', 'like', "%{$q}%");
+                    })
+                    ->when($city, function ($query) use ($city) {
+                        $query->where('city', $city);
+                    })
+                    ->get()
+                    ->map(function ($h) {
+                        return [
+                            'id' => $h->id,
+                            'name' => $h->name,
+                            'description' => $h->description,
+                            'city' => $h->city,
+                            'email' => $h->email,
+                            'type' => 'brotherhood',
+                            'created_at' => $h->created_at,
+                        ];
+                    });
+
+                $results = $results->merge($brotherhoods);
+            }
+            $results = $results->sortByDesc('created_at')->values();
+
+            $page = LengthAwarePaginator::resolveCurrentPage();
+
+            $paginated = new LengthAwarePaginator(
+                $results->forPage($page, $perPage)->values(),
+                $results->count(),
+                $perPage,
+                $page,
+                [
+                    'path' => url()->current(),
+                    'query' => $request->query(),
+                ]
+            );
+
+            return $this->successResponse(
+                $paginated,
+                'Se han obtenido correctamente los resultados de la búsqueda'
+            );
+        } catch (\Throwable $e) {
+            return $this->errorResponse(
+                $e->getMessage(),
+                'Ha ocurrido un error al obtener los resultados de la búsqueda'
+            );
         }
-    }
-
-    /**
-     * Realiza la búsqueda en el modelo correspondiente (Band o Brotherhood).
-     *
-     * @param string $model El modelo a utilizar para la búsqueda (Band o Brotherhood).
-     * @param string $search El término de búsqueda.
-     * @param bool $filter Si se debe aplicar el filtro de provincia.
-     * @param string|null $province Provincia a filtrar (opcional).
-     * @return \Illuminate\Support\Collection Los resultados de la búsqueda.
-     */
-    private function search(string $model, string $search, bool $filter, ?string $province)
-    {
-        $query = $model::where('name', 'like', "%{$search}%");
-
-        if ($filter) {
-            $query = $query->where('city', $province);
-        }
-
-        return $query->get();
     }
 }
