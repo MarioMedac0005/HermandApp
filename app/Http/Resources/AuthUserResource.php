@@ -18,10 +18,12 @@ class AuthUserResource extends JsonResource
             'id'   => $this->id,
             'name' => $this->name,
 
+            'panel' => $this->panel,
+
             'avatar'       => $this->navbar_avatar,
             'organization' => $this->navbar_organization,
 
-            'roles' => $this->getRoleNames(),
+            'roles' => $this->getRoleNames()->first(),
 
             'permissions' => [
                 'can_access_admin' => $this->hasRole('admin'),

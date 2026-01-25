@@ -27,6 +27,7 @@ class UserResource extends JsonResource
             // Relaciones opcionales, si existen:
             'band' => new BandResource($this->whenLoaded('band')),
             'brotherhood' => new BrotherhoodResource($this->whenLoaded('brotherhood')),
+            'role' => $this->getRoleNames()->first(),
         ];
     }
 }

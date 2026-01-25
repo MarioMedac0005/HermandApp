@@ -134,4 +134,23 @@ class User extends Authenticatable
 
         return '—';
     }
+
+    public function getPanelAttribute(): string|null 
+    {
+        if ($this->hasRole('admin')) {
+            return 'admin';
+        }
+
+        if ($this->hasRole('gestor')) {
+            if ($this->band) {
+                return 'gestor_banda';
+            }
+
+            if ($this->brotherhood) {
+                return 'gestor_hermandad';
+            }
+        }
+
+        return null;
+    }
 }

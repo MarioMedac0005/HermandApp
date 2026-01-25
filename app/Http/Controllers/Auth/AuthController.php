@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\AuthUserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -57,10 +58,7 @@ class AuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'user' => [
-                'name' => $user->name,
-                'email' => $user->email,
-            ],
+            'user' => new AuthUserResource($user),
             'token_type' => 'Bearer',
             'access_token' => $user->createToken('access_token')->plainTextToken
         ], 200);
