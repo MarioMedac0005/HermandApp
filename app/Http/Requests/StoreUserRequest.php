@@ -26,7 +26,6 @@ class StoreUserRequest extends FormRequest
             'surname' => 'nullable|string|max:255',
             'email' => 'required|email|unique:users,email|max:255',
             'password' => 'required|string|min:8|confirmed',
-            'type' => 'required|in:band_admin,brotherhood_admin,guest',
             'band_id' => 'nullable|exists:bands,id',
             'brotherhood_id' => 'nullable|exists:brotherhoods,id',
         ];
