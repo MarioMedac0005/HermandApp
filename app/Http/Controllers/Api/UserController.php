@@ -16,7 +16,7 @@ class UserController extends Controller
     public function index()
     {
         try {
-            $user = User::paginate(10);
+            $user = User::with(['band', 'brotherhood'])->paginate(10);
 
             return UserResource::collection($user)
                 ->additional([
