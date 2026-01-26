@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 
@@ -104,15 +105,35 @@ class AuthController extends Controller
             $gestor->assignRole('gestor');
         });
 
-        $resetResult = Password::broker()->sendResetLink(
-            $request->only('email')
-        );
+        // 👇 AÑADIDO
+        $mailSent = true;
+
+        try {
+            $status = Password::broker()->sendResetLink(
+                $request->only('email')
+            );
+
+            if ($status !== Password::RESET_LINK_SENT) {
+                $mailSent = false;
+            }
+        } catch (\Throwable $e) {
+            $mailSent = false;
+
+            Log::error('Error enviando email de reset', [
+                'email' => $request->email,
+                'error' => $e->getMessage(),
+            ]);
+        }
 
         return response()->json([
             'success' => true,
-            'message' => 'Gestor creado y email enviado',
+            'mail_sent' => $mailSent,
+            'message' => $mailSent
+                ? 'Gestor creado y email enviado'
+                : 'Gestor creado, pero el email NO pudo enviarse',
         ], 201);
     }
+
 
 
 }
