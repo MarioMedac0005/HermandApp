@@ -79,7 +79,7 @@ class ResetPasswordController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => __($status),
-            ], 500);
+            ], 422);
         }
     }
 }
