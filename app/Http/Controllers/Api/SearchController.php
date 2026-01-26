@@ -37,7 +37,7 @@ class SearchController extends Controller
                             'city'        => $band->city,
                             'email'       => $band->email,
                             'type'        => 'band',
-                            'banner'      => $band->banner?->path ?? '/placeholder.jpg',
+                            'banner' => $band->banner?->url ?? null,
                             'created_at'  => $band->created_at,
                         ];
                     });
@@ -62,7 +62,7 @@ class SearchController extends Controller
                             'city'        => $h->city,
                             'email'       => $h->email,
                             'type'        => 'brotherhood',
-                            'banner'      => $h->banner?->path ?? '/placeholder.jpg',
+                            'banner'      => $h->banner?->url ?? null,
                             'created_at'  => $h->created_at,
                         ];
                     });
