@@ -40,7 +40,7 @@ Route::apiResource('processions', ProcessionController::class)->only(['index', '
 Route::apiResource('availabilities', AvailabilityController::class)->only(['index', 'show']);
 
 // Route::post('/password/forgot', [ResetPasswordController::class, 'sendResetLink']); // Pendiente
-Route::post('/password/reset', [ResetPasswordController::class, 'resetPassword']);  // Pendiente
+Route::post('/reset-password', [ResetPasswordController::class, 'resetPassword']);  // Pendiente
 
 /*
 |--------------------------------------------------------------------------
