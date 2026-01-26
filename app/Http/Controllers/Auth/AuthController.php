@@ -105,7 +105,6 @@ class AuthController extends Controller
             $gestor->assignRole('gestor');
         });
 
-        // 👇 AÑADIDO
         $mailSent = true;
 
         try {

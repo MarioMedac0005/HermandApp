@@ -39,7 +39,7 @@ Route::apiResource('brotherhoods', BrotherhoodController::class)->only(['index',
 Route::apiResource('processions', ProcessionController::class)->only(['index', 'show']);
 Route::apiResource('availabilities', AvailabilityController::class)->only(['index', 'show']);
 
-// Route::post('/password/forgot', [ResetPasswordController::class, 'sendResetLink']); // Pendiente
+Route::post('/password/forgot', [ResetPasswordController::class, 'sendResetLink']); // Pendiente
 Route::post('/reset-password', [ResetPasswordController::class, 'resetPassword']);  // Pendiente
 
 /*
