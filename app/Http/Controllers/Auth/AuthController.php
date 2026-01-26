@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -89,31 +90,29 @@ class AuthController extends Controller
             ], 400);
         }
 
-        DB::transaction(function () use ($request, &$gestor, &$resetResult) {
+        $gestor = null;
+
+        DB::transaction(function () use ($request, &$gestor) {
             $gestor = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => null,
-                'band_id' => $request->band_id ?? null,
-                'brotherhood_id' => $request->brotherhood_id ?? null,
+                'password' => bcrypt(Str::random(16)),
+                'band_id' => $request->band_id,
+                'brotherhood_id' => $request->brotherhood_id,
             ]);
 
             $gestor->assignRole('gestor');
-
-            $resetResult = Password::broker()->sendResetLink($request->only('email'));
         });
 
-        if ($resetResult === Password::RESET_LINK_SENT) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Gestor creado y email enviado',
-            ], 201);
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'Gestor creado, pero no se pudo enviar el email',
-            ], 500);
-        }
+        $resetResult = Password::broker()->sendResetLink(
+            $request->only('email')
+        );
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Gestor creado y email enviado',
+        ], 201);
     }
+
 
 }
