@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class CustomResetPassword extends Notification
+class ResetPasswordNotification extends Notification
 {
     use Queueable;
     public $token;
@@ -36,13 +36,16 @@ class CustomResetPassword extends Notification
     public function toMail(object $notifiable): MailMessage
     {
 
-        $url = env('FRONTEND_URL') . "/reset-password?token={$this->token}&email={$notifiable->email}";
+        $resetUrl =
+            config('app.frontend_url') .
+            '/reset-password?token=' . $this->token .
+            '&email=' . urlencode($notifiable->email);
 
         return (new MailMessage)
             ->subject('Restablece tu contraseña en HermandApp')
             ->greeting('Hola ' . $notifiable->name . '!')
             ->line('Has recibido este correo electrónico porque has solicitado ser gestor en HermandApp. Para ello te hemos enviado este correo para que puedas establecer la contraseña de tu nueva cuenta.')
-            ->action('Restablecer contraseña', url('/'))
+            ->action('Restablecer contraseña', $resetUrl)
             ->line('Este enlace expirará en 60 minutos.')
             ->line('Si no solicitaste este cambio, ignora este correo.')
             ->line('Gracias por usar HermandApp!');

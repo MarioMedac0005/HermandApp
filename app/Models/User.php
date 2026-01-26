@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Notifications\CustomResetPassword;
+use App\Notifications\ResetPasswordNotification;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Notifications\Notifiable;
@@ -94,7 +95,7 @@ class User extends Authenticatable
 
     public function sendPasswordResetNotification($token)
     {
-        $this->notify(new CustomResetPassword($token));
+        $this->notify(new ResetPasswordNotification($token));
     }
 
     public function getNavbarAvatarAttribute(): string
