@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\GestorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,7 +16,7 @@ use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\ProcessionController;
 use App\Http\Controllers\Api\BrotherhoodController;
 use App\Http\Controllers\Api\AvailabilityController;
-
+use App\Http\Controllers\Api\GestorController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 
 /*
