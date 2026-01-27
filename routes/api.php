@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GestorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -40,7 +41,7 @@ Route::apiResource('brotherhoods', BrotherhoodController::class)->only(['index',
 Route::apiResource('processions', ProcessionController::class)->only(['index', 'show']);
 Route::apiResource('availabilities', AvailabilityController::class)->only(['index', 'show']);
 
-// Route::post('/password/forgot', [ResetPasswordController::class, 'sendResetLink']); // Pendiente
+Route::post('/password/forgot', [ResetPasswordController::class, 'sendResetLink']); // Pendiente
 Route::post('/reset-password', [ResetPasswordController::class, 'resetPassword']);  // Pendiente
 
 /*
@@ -126,7 +127,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
 
     Route::get('/dashboard/count', [DashboardController::class, 'count']);
 
-    Route::post('/gestor', [AuthController::class, 'addGestor']);
+    Route::apiResource('gestores', GestorController::class)->only(['index', 'store', 'destroy']);
 });
 
 Route::post('/registration-lead', [RegistrationLeadController::class, 'store']);
