@@ -28,6 +28,10 @@ class BrotherhoodResource extends JsonResource
             // No se incluye 'deleted_at' porque normalmente no se muestra en la API
             // Si $this->created_at tiene valor, llama a toDateTimeString().
             // Si $this->created_at es null, simplemente devuelve null (sin error).
+
+            'media' => MediaResource::collection(
+                $this->whenLoaded('media')
+            ),
         ];
     }
 }

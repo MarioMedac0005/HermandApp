@@ -17,7 +17,7 @@ class BrotherhoodController extends Controller
     {
         try {
 
-            $brotherhood = Brotherhood::paginate(10);
+            $brotherhood = Brotherhood::with('media')->paginate(10);
 
             return BrotherhoodResource::collection($brotherhood)
                 ->additional([
@@ -58,6 +58,7 @@ class BrotherhoodController extends Controller
     public function show(Brotherhood $brotherhood)
     {
         try {
+            $brotherhood->load('media');
 
             return (new BrotherhoodResource($brotherhood))
                 ->additional([
