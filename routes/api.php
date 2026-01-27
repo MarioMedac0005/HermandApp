@@ -19,7 +19,6 @@ use App\Http\Controllers\Api\BrotherhoodController;
 use App\Http\Controllers\Api\AvailabilityController;
 
 use App\Http\Controllers\Auth\ResetPasswordController;
-use App\Http\Controllers\Api\RegistrationLeadController;
 
 /*
 |--------------------------------------------------------------------------
