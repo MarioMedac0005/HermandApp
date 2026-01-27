@@ -89,31 +89,20 @@ class GestorController extends Controller
         ], 201);
     }
 
-    public function destroy(User $gestor)
+    public function destroy($id)
     {
-        try {
-            if (! $gestor->hasRole('gestor')) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'El usuario que estas intentado eliminar no es un gestor'
-                ], 404);
-            }
+        $gestor = User::whereHas('roles', function ($q) {
+            $q->where('name', 'gestor');
+        })->findOrFail($id);
 
-            DB::transaction(function () use ($gestor) {
-                $gestor->removeRole('gestor');
-                $gestor->delete();
-            });
+        DB::transaction(function () use ($gestor) {
+            $gestor->removeRole('gestor');
+            $gestor->delete();
+        });
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Gestor eliminado correctamente'
-            ], 200);
-
-        } catch (\Exception $e) {
-            return $this->errorResponse(
-                'Ha ocurrido un error al eliminar el gestor',
-                $e->getMessage()
-            );
-        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Gestor eliminado correctamente'
+        ]);
     }
 }
