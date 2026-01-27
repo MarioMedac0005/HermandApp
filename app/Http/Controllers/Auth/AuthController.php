@@ -38,9 +38,8 @@ class AuthController extends Controller
             'organization.rehearsalPlace' => 'nullable|string|max:255',
         ]);
 
-        $to = config('app.registration_inbox');
-
-        Mail::to($to)->send(new RegistrationLeadMail($data));
+        Mail::to('support@23arenadaw.com.es')
+            ->send(new RegistrationLeadMail($data));
 
         return response()->json([
             'message' => 'Datos recibidos y correo enviado correctamente.'
