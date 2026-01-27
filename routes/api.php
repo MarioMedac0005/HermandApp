@@ -3,21 +3,22 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Auth\ResetPasswordController;
-
+use App\Http\Resources\AuthUserResource;
 use App\Http\Controllers\Api\BandController;
+
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\MediaController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\ContractController;
 use App\Http\Controllers\Api\FeaturedController;
+use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\ProcessionController;
 use App\Http\Controllers\Api\BrotherhoodController;
 use App\Http\Controllers\Api\AvailabilityController;
-use App\Http\Controllers\Api\DashboardController;
-use App\Http\Controllers\Api\SearchController;
 
-use App\Http\Resources\AuthUserResource;
+use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Api\RegistrationLeadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -127,3 +128,5 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
 
     Route::post('/gestor', [AuthController::class, 'addGestor']);
 });
+
+Route::post('/registration-lead', [RegistrationLeadController::class, 'store']);
