@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreContractRequest extends FormRequest
 {
@@ -22,28 +23,39 @@ class StoreContractRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'type' => 'required|in:christ,virgin',
-            'itinerary' => 'required|string',
-            'checkout_time' => 'required|date|before:checkin_time',
-            'checkin_time' => 'required|date|after:checkout_time',
-            'brotherhood_id' => 'required|exists:brotherhoods,id',
+            'date' => ['required', 'date'],
+
+            'status' => [
+                'nullable',
+                Rule::in(['expired', 'pending', 'active']),
+            ],
+
+            'amount' => ['nullable', 'numeric', 'min:0'],
+
+            'description' => ['nullable', 'string'],
+
+            'band_id' => ['required', 'exists:bands,id'],
+
+            'procession_id' => ['required', 'exists:processions,id'],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'name.required' => 'El nombre de la procesión es obligatorio.',
-            'type.required' => 'El tipo de procesión es obligatorio.',
-            'type.in' => 'El tipo debe ser "christ" o "virgin".',
-            'itinerary.required' => 'El itinerario es obligatorio.',
-            'checkout_time.required' => 'La hora de salida es obligatoria.',
-            'checkout_time.before' => 'La hora de salida debe ser anterior a la hora de entrada.',
-            'checkin_time.required' => 'La hora de entrada es obligatoria.',
-            'checkin_time.after' => 'La hora de entrada debe ser posterior a la hora de salida.',
-            'brotherhood_id.required' => 'La hermandad es obligatoria.',
-            'brotherhood_id.exists' => 'La hermandad seleccionada no existe.',
+            'date.required' => 'La fecha del contrato es obligatoria.',
+            'date.date' => 'La fecha del contrato no es válida.',
+
+            'status.in' => 'El estado debe ser: pendiente, activo o expirado.',
+
+            'amount.numeric' => 'El importe debe ser un número.',
+            'amount.min' => 'El importe no puede ser negativo.',
+
+            'band_id.required' => 'La banda es obligatoria.',
+            'band_id.exists' => 'La banda seleccionada no existe.',
+
+            'procession_id.required' => 'La procesión es obligatoria.',
+            'procession_id.exists' => 'La procesión seleccionada no existe.',
         ];
     }
 }
