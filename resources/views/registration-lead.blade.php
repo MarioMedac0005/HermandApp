@@ -18,7 +18,6 @@
                     <tr>
                         <td style="background-color: #1f2937; padding: 40px 30px; text-align: center;">
                             <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.5px;">Nuevo Registro Recibido</h1>
-                            <p style="color: #9ca3af; margin: 10px 0 0 0; font-size: 16px;">Revisar datos para creación en backend</p>
                         </td>
                     </tr>
 
@@ -29,7 +28,7 @@
                             <!-- Organization Type Badge -->
                             <div style="text-align: center; margin-bottom: 35px;">
                                 <span style="background-color: #e0e7ff; color: #3730a3; padding: 8px 16px; border-radius: 50px; font-weight: bold; font-size: 14px; text-transform: uppercase;">
-                                    TIPO: {{ $data['orgType'] }}
+                                    TIPO: {{ $data['orgType'] === 'band' ? 'Banda' : ($data['orgType'] === 'brotherhood' ? 'Hermandad' : $data['orgType']) }}
                                 </span>
                             </div>
 
@@ -37,7 +36,7 @@
                             <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 35px;">
                                 <tr>
                                     <td style="padding-bottom: 15px; border-bottom: 2px solid #f3f4f6;">
-                                        <h3 style="margin: 0; color: #111827; font-size: 18px; text-transform: uppercase; letter-spacing: 0.05em;">👤 Datos de la Cuenta</h3>
+                                        <h3 style="margin: 0; color: #111827; font-size: 18px; text-transform: uppercase; letter-spacing: 0.05em;">Datos de la Cuenta</h3>
                                     </td>
                                 </tr>
                                 <tr>
@@ -66,7 +65,7 @@
                             <table width="100%" border="0" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td style="padding-bottom: 15px; border-bottom: 2px solid #f3f4f6;">
-                                        <h3 style="margin: 0; color: #111827; font-size: 18px; text-transform: uppercase; letter-spacing: 0.05em;">🏢 Datos de la Organización</h3>
+                                        <h3 style="margin: 0; color: #111827; font-size: 18px; text-transform: uppercase; letter-spacing: 0.05em;">Datos de la Organización</h3>
                                     </td>
                                 </tr>
                                 <tr>
