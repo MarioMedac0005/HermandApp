@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GestorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -125,5 +126,5 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
 
     Route::get('/dashboard/count', [DashboardController::class, 'count']);
 
-    Route::post('/gestor', [AuthController::class, 'addGestor']);
+    Route::apiResource('gestores', GestorController::class)->only(['index', 'store', 'destroy']);
 });
