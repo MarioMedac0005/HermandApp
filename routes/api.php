@@ -32,6 +32,7 @@ use App\Http\Controllers\Api\RegistrationLeadController;
 */
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
 Route::get('/search', [SearchController::class, 'index']);
 Route::get('/featured', [FeaturedController::class, 'index']);
 
@@ -129,5 +130,3 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
 
     Route::apiResource('gestores', GestorController::class)->only(['index', 'store', 'destroy']);
 });
-
-Route::post('/registration-lead', [RegistrationLeadController::class, 'store']);

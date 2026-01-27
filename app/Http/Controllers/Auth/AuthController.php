@@ -4,36 +4,47 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AuthUserResource;
+use App\Mail\RegistrationLeadMail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:50',
-            'email' => 'required|string|email|unique:users',
-            'password' => 'required|string|min:6',
+        // Validación (suave, solo para asegurar estructura)
+        $data = $request->validate([
+            'orgType' => 'required|in:brotherhood,band',
+
+            'account.firstName' => 'required|string|max:80',
+            'account.lastName'  => 'required|string|max:120',
+            'account.email'     => 'required|email|max:255',
+
+            'organization' => 'required|array',
+            'organization.name' => 'required|string|max:255',
+            'organization.city' => 'required|string|max:120',
+            'organization.nifCif' => 'required|string|max:30',
+            'organization.email'  => 'required|email|max:255',
+
+            // Hermandad (opcionales porque dependen del tipo)
+            'organization.canonicalSeat' => 'nullable|string|max:255',
+            'organization.phone'         => 'nullable|string|max:30',
+
+            // Banda (opcionales)
+            'organization.description'    => 'nullable|string|max:500',
+            'organization.rehearsalPlace' => 'nullable|string|max:255',
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        $to = config('app.registration_inbox');
+
+        Mail::to($to)->send(new RegistrationLeadMail($data));
 
         return response()->json([
-            'success' => true,
-            'user' => [
-                'name' => $user->name,
-                'email' => $user->email,
-            ],
-            'token_type' => 'Bearer',
-            'access_token' => $user->createToken('access_token')->plainTextToken
-        ], 201);
+            'message' => 'Datos recibidos y correo enviado correctamente.'
+        ], 200);
     }
 
     public function login(Request $request)
