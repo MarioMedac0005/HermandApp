@@ -7,6 +7,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Auth;
 
 class UserController extends Controller
 {
@@ -94,6 +95,14 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         try {
+
+            if (Auth::id() === $user->id && Auth::user()->hasRole('admin')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Un administrador no puede eliminarse a sí mismo',
+                ], 403);
+            }
+
             $user->delete();
 
             return response()->json([
@@ -101,7 +110,10 @@ class UserController extends Controller
                 'message' => 'El usuario ha sido eliminado correctamente',
             ], 200);
         } catch (\Exception $e) {
-            return $this->errorResponse('Ha ocurrido un error al intentar borrar un usuario', $e->getMessage());
+            return $this->errorResponse(
+                'Ha ocurrido un error al intentar borrar un usuario',
+                $e->getMessage()
+            );
         }
     }
 }
