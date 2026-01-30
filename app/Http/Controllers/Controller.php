@@ -13,7 +13,7 @@ abstract class Controller
      * @param string $message Mensaje descriptivo de la operacion
      * @return \Illuminate\Http\JsonResponse Respuesta JSON con éxito y datos
      */
-    protected function successResponse($data, string $message): JsonResponse
+    protected function successResponse(string $message, $data = null): JsonResponse
     {
         return response()->json([
             'success' => true,
@@ -21,6 +21,7 @@ abstract class Controller
             'data' => $data
         ], 200);
     }
+
 
     /**
      * Devuelve una respuesta JSON de error

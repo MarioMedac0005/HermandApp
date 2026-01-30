@@ -7,6 +7,8 @@ use App\Http\Requests\StoreAvailabilityRequest;
 use App\Http\Requests\UpdateAvailabilityRequest;
 use App\Http\Resources\AvailabilityResource;
 use App\Models\Availability;
+use App\Models\Band;
+use Carbon\Carbon;
 
 class AvailabilityController extends Controller
 {
@@ -28,6 +30,28 @@ class AvailabilityController extends Controller
                 ->setStatusCode(200);
         } catch (\Exception $e) {
             return $this->errorResponse('Ha ocurrido un error al obtener el listado de disponibilidad', $e->getMessage());
+        }
+    }
+
+    public function getBookedDates(Band $band)
+    {
+        try {
+            $dates = Availability::where('band_id', $band->id)
+                ->where('status', 'occupied')
+                ->pluck('date')
+                ->map(fn ($date) => Carbon::parse($date)->format('Y-m-d'))
+                ->values();
+
+            return $this->successResponse(
+                'Días ocupados recuperados correctamente',
+                $dates
+            );
+
+        } catch (\Exception $e) {
+            return $this->errorResponse(
+                'Ha ocurrido un error al obtener las fechas reservadas',
+                $e->getMessage()
+            );
         }
     }
 

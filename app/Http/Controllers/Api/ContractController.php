@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Availability;
 use App\Models\Contract;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreContractRequest;
 use App\Http\Requests\UpdateContractRequest;
 use App\Http\Resources\ContractResource;
+use Auth;
+use Carbon\Carbon;
 
 class ContractController extends Controller
 {

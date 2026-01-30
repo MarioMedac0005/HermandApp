@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('availabilities', function (Blueprint $table) {
             $table->id();
             $table->datetime('date');
-            $table->enum('status', ['free', 'occupied'])->default('free');
+            $table->enum('status', ['free', 'occupied'])->default('occupied');
             $table->text('description')->nullable();
             $table->foreignId('band_id')->constrained();
             $table->timestamps();

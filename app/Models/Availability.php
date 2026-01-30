@@ -19,6 +19,10 @@ class Availability extends Model
         'band_id'
     ];
 
+    protected $dates = [
+        'date'
+    ];
+
     /**
      * Obtener la banda de una disponibilidad.
      */
