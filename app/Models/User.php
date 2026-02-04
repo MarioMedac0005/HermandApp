@@ -28,13 +28,15 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'surname',
         'email',
         'password',
-        'surname',
-        'type',
         'band_id',
-        'brotherhood_id'
+        'brotherhood_id',
+        'activation_token',
+        'activation_token_expires_at',
     ];
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -56,6 +58,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'activation_token_expires_at' => 'datetime',
         ];
     }
 
@@ -136,7 +139,7 @@ class User extends Authenticatable
         return '—';
     }
 
-    public function getPanelAttribute(): string|null 
+    public function getPanelAttribute(): string|null
     {
         if ($this->hasRole('admin')) {
             return 'admin';
