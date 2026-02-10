@@ -33,19 +33,19 @@ class MediaSeeder extends Seeder
 
         $bandaImagenes = [
             'banner' => [
-                'fotoBanda01.jpeg',
+                'fotoBanda01.jpg',
                 'fotoBanda02.jpg',
                 'fotoBanda03.jpg',
                 'fotoBanda04.jpg',
             ],
             'profile' => [
-                'profileBanda01.png',
+                'profileBanda01.jpg',
                 'profileBanda02.jpg',
                 'profileBanda03.jpg',
                 'profileBanda04.jpg',
             ],
             'gallery' => [
-                'galleryBanda01.webp',
+                'galleryBanda01.jpg',
                 'galleryBanda02.jpg',
                 'galleryBanda03.jpg',
             ],
