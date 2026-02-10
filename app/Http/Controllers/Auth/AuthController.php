@@ -2,73 +2,32 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\AuthUserResource;
-use App\Mail\RegistrationLeadMail;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Models\OrganizationRequest;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
+use App\Http\Resources\AuthUserResource;
+use App\Http\Requests\ActivateAccountRequest;
+use App\Http\Requests\StoreOrganizationRequest;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    public function register(StoreOrganizationRequest $request)
     {
-        $data = $request->validate([
-            'orgType' => 'required|in:brotherhood,band',
-
-            // Cuenta
-            'account.firstName' => 'required|string|min:2|max:80',
-            'account.lastName'  => 'required|string|min:2|max:120',
-            'account.email'     => 'required|email|max:255',
-
-            // Organización
-            'organization' => 'required|array',
-            'organization.name' => 'required|string|min:2|max:255',
-            'organization.city' => 'required|string|min:2|max:120',
-            'organization.nifCif' => [
-                'required',
-                'regex:/^([A-HJ-NP-SUVW]\d{7}[0-9A-J]|[0-9]{8}[A-Z])$/i'
+        OrganizationRequest::create([
+            'type' => $request->input('type'),
+            'payload' => [
+                'user' => $request->input('user'),
+                'organization' => $request->input('organization'),
             ],
-            'organization.email'  => 'required|email|max:255',
-
-            // Hermandad (solo si orgType = brotherhood)
-            'organization.canonicalSeat' => 'required_if:orgType,brotherhood|string|max:255',
-            'organization.phone'         => 'required_if:orgType,brotherhood|string|max:30',
-
-            // Banda (solo si orgType = band)
-            'organization.description'    => 'required_if:orgType,band|string|max:500',
-            'organization.rehearsalPlace' => 'required_if:orgType,band|string|max:255',
-        ], [
-            // Mensajes personalizados
-            'orgType.in' => 'El tipo de organización no es válido.',
-
-            'organization.canonicalSeat.required_if' =>
-                'La sede canónica es obligatoria para una hermandad.',
-            'organization.phone.required_if' =>
-                'El teléfono es obligatorio para una hermandad.',
-
-            'organization.description.required_if' =>
-                'La descripción es obligatoria para una banda.',
-            'organization.rehearsalPlace.required_if' =>
-                'El lugar de ensayo es obligatorio para una banda.',
         ]);
 
-        // Traducción del tipo
-        $orgTypes = [
-            'band' => 'Banda',
-            'brotherhood' => 'Hermandad',
-        ];
-
-        $data['orgTypeLabel'] = $orgTypes[$data['orgType']];
-
-        Mail::to('support@23arenadaw.com.es')
-            ->send(new RegistrationLeadMail($data));
-
         return response()->json([
-            'message' => 'Datos recibidos y correo enviado correctamente.'
-        ], 200);
+            'message' => 'Tu solicitud ha sido enviada. Un administrador la revisará en breve.'
+        ], 201);
     }
 
 
@@ -104,6 +63,35 @@ class AuthController extends Controller
 
         return response()->json([
             'success' => true,
+        ]);
+    }
+
+    public function activate(ActivateAccountRequest $request, string $token)
+    {
+        $user = User::where('activation_token', $token)->first();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'El enlace de activación no es válido.'
+            ], 404);
+        }
+
+        if ($user->activation_token_expires_at && $user->activation_token_expires_at->isPast()) {
+            return response()->json([
+                'message' => 'El enlace de activación ha expirado.'
+            ], 410);
+        }
+
+        DB::transaction(function () use ($user, $request) {
+            $user->update([
+                'password' => Hash::make($request->password),
+                'activation_token' => null,
+                'activation_token_expires_at' => null,
+            ]);
+        });
+
+        return response()->json([
+            'message' => 'Cuenta activada correctamente. Ya puedes iniciar sesión.'
         ]);
     }
 }

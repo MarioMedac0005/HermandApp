@@ -21,6 +21,8 @@ return new class extends Migration
             $table->foreignId('band_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('brotherhood_id')->nullable()->constrained()->nullOnDelete();
             $table->rememberToken();
+            $table->string('activation_token')->nullable()->unique();
+            $table->timestamp('activation_token_expires_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

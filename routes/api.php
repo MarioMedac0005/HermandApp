@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\BandController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\MediaController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Api\GestorController;
 use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\ContractController;
 use App\Http\Controllers\Api\FeaturedController;
@@ -16,8 +17,8 @@ use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\ProcessionController;
 use App\Http\Controllers\Api\BrotherhoodController;
 use App\Http\Controllers\Api\AvailabilityController;
-use App\Http\Controllers\Api\GestorController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Api\OrganizationRequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::get('/search', [SearchController::class, 'index']);
 Route::get('/featured', [FeaturedController::class, 'index']);
 Route::get('bands/{band}/booked-dates', [AvailabilityController::class, 'getBookedDates']);
+Route::post('/activate/{token}', [AuthController::class, 'activate']);
 
 // Rutas públicas de lectura
 Route::apiResource('bands', BandController::class)->only(['index', 'show']);
@@ -128,4 +130,6 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::get('/dashboard/count', [DashboardController::class, 'count']);
 
     Route::apiResource('gestores', GestorController::class)->only(['index', 'store', 'destroy']);
+
+    Route::apiResource('organization-requests', OrganizationRequestController::class)->only(['index', 'show', 'update']);
 });
