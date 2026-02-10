@@ -86,8 +86,8 @@ class SearchController extends Controller
             );
 
             return $this->successResponse(
-                $paginated,
-                'Se han obtenido correctamente los resultados de la búsqueda'
+                'Se han obtenido correctamente los resultados de la búsqueda',
+                $paginated
             );
         } catch (\Throwable $e) {
             return $this->errorResponse(
