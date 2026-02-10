@@ -39,6 +39,8 @@ class UserController extends Controller
         try {
             $user = User::create($request->validated());
 
+            $user->assignRole('admin');
+
             return (new UserResource($user))
                 ->additional([
                     'success' => true,
