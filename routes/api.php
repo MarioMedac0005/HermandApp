@@ -112,6 +112,8 @@ Route::middleware(['auth:sanctum', 'role:gestor|admin'])->group(function () {
     ]);
 
     Route::apiResource('contracts', ContractController::class);
+    Route::post('contracts/{contract}/accept', [ContractController::class, 'accept']);
+    Route::post('contracts/{contract}/reject', [ContractController::class, 'reject']);
 });
 
 /*

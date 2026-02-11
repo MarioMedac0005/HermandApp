@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Band;
+use App\Models\Brotherhood;
 use App\Models\Procession;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -16,19 +17,25 @@ class ContractFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    public function definition(): array
+    public function definition()
     {
 
-        $status = ['expired', 'pending', 'active'];
+        // Primero elegimos un brotherhood al azar
+        $brotherhood = Brotherhood::all()->random();
+
+        // Si el brotherhood tiene procesiones, elegimos una al azar; si no, null
+        $procession = $brotherhood->processions->isNotEmpty()
+            ? $brotherhood->processions->random()
+            : null;
 
         return [
-            'date' => fake()->date(),
-            'status' => fake()->randomElement($status),
-            'amount' => fake()->randomFloat(2, 0, 10000),
-            'description' => fake()->text(),
+            'date' => $this->faker->date(),
+            'status' => 'pending',
+            'amount' => $this->faker->randomFloat(2, 0, 10000),
+            'description' => $this->faker->text(),
             'band_id' => Band::all()->random()->id,
-            'procession_id' => Procession::all()->random()->id,
-            
+            'brotherhood_id' => $brotherhood->id,
+            'procession_id' => $procession?->id, // null-safe operator
         ];
     }
 }

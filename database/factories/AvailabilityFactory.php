@@ -17,15 +17,10 @@ class AvailabilityFactory extends Factory
      */
     public function definition(): array
     {
-        $status = ['free', 'occupied'];
-
         return [
-       
             'date' => fake()->date(),
-            'status' => fake()->randomElement($status),
             'description' => fake()->text(),
             'band_id' => Band::all()->random()->id
-         
         ];
     }
 }

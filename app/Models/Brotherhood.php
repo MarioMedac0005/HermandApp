@@ -69,4 +69,12 @@ class Brotherhood extends Model
     {
         return $this->morphMany(Media::class, 'model')->where('category', 'gallery');
     }
+
+    /**
+     * Obtener los contratos de una hermandad.
+     */
+    public function contracts(): HasMany
+    {
+        return $this->hasMany(Contract::class);
+    }
 }

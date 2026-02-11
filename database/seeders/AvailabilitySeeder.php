@@ -13,6 +13,6 @@ class AvailabilitySeeder extends Seeder
      */
     public function run(): void
     {
-        Availability::factory(5)->create();
+        Availability::factory(20)->create();
     }
 }

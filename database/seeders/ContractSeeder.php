@@ -13,6 +13,6 @@ class ContractSeeder extends Seeder
      */
     public function run(): void
     {
-        Contract::factory(5)->create();
+        Contract::factory(20)->create();
     }
 }

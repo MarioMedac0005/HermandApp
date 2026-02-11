@@ -17,6 +17,9 @@ class Contract extends Model
         'status',
         'amount',
         'description',
+        'pdf_path',
+        'signed_by_band_at',
+        'signed_by_brotherhood_at',
         'band_id',
         'brotherhood_id',
         'procession_id'

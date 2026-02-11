@@ -14,7 +14,6 @@ class Availability extends Model
 
     protected $fillable = [
         'date',
-        'status',
         'description',
         'band_id'
     ];

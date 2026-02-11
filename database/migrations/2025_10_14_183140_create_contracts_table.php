@@ -13,12 +13,23 @@ return new class extends Migration {
         Schema::create('contracts', function (Blueprint $table) {
             $table->id();
             $table->datetime('date');
-            $table->enum('status', ['expired', 'pending', 'active'])->default('pending');
+            $table->enum('status', [
+                'pending', // creado por la hermandad
+                'rejected', // rechazado por la banda
+                'accepted', // aceptado por la banda
+                'signed_by_band', // firmado por la banda
+                'signed_by_brotherhood', // firmado por la hermandad
+                'completed', // firmado por ambos
+                'expired', // expirado
+            ])->default('pending');
             $table->decimal('amount', 10, 2)->nullable();
             $table->text('description')->nullable();
-            $table->foreignId('band_id')->constrained();
-            $table->foreignId('brotherhood_id')->after('description')->nullable()->constrained()->onDelete('cascade');
-            $table->foreignId('procession_id')->nullable()->constrained();
+            $table->string('pdf_path')->nullable();
+            $table->timestamp('signed_by_band_at')->nullable();
+            $table->timestamp('signed_by_brotherhood_at')->nullable();
+            $table->foreignId('band_id')->constrained()->onDelete('cascade');
+            $table->foreignId('brotherhood_id')->constrained()->onDelete('cascade');
+            $table->foreignId('procession_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });
