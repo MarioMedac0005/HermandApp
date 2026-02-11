@@ -36,7 +36,9 @@ class StoreContractRequest extends FormRequest
 
             'band_id' => ['required', 'exists:bands,id'],
 
-            'procession_id' => ['required', 'exists:processions,id'],
+            'brotherhood_id' => ['required', 'exists:brotherhoods,id'],
+
+            'procession_id' => ['nullable', 'exists:processions,id'],
         ];
     }
 
@@ -54,7 +56,9 @@ class StoreContractRequest extends FormRequest
             'band_id.required' => 'La banda es obligatoria.',
             'band_id.exists' => 'La banda seleccionada no existe.',
 
-            'procession_id.required' => 'La procesión es obligatoria.',
+            'brotherhood_id.required' => 'La hermandad es obligatoria.',
+            'brotherhood_id.exists' => 'La hermandad seleccionada no existe.',
+
             'procession_id.exists' => 'La procesión seleccionada no existe.',
         ];
     }

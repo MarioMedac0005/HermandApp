@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -16,9 +15,10 @@ return new class extends Migration
             $table->datetime('date');
             $table->enum('status', ['expired', 'pending', 'active'])->default('pending');
             $table->decimal('amount', 10, 2)->nullable();
-            $table->text('description')->nullable(); 
+            $table->text('description')->nullable();
             $table->foreignId('band_id')->constrained();
-            $table->foreignId('procession_id')->constrained();
+            $table->foreignId('brotherhood_id')->after('description')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('procession_id')->nullable()->constrained();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -18,9 +18,10 @@ class Contract extends Model
         'amount',
         'description',
         'band_id',
+        'brotherhood_id',
         'procession_id'
     ];
-    
+
     /**
      * Obtener la procesion de un contrato.
      */
@@ -36,5 +37,13 @@ class Contract extends Model
     public function band(): BelongsTo
     {
         return $this->belongsTo(Band::class);
+    }
+
+    /**
+     * Obtener la hermandad de un contrato.
+     */
+    public function brotherhood(): BelongsTo
+    {
+        return $this->belongsTo(Brotherhood::class);
     }
 }
