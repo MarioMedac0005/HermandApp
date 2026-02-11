@@ -15,15 +15,18 @@ class AuthUserResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id'   => $this->id,
+            'id' => $this->id,
             'name' => $this->name,
 
             'panel' => $this->panel,
 
-            'avatar'       => $this->navbar_avatar,
+            'avatar' => $this->navbar_avatar,
             'organization' => $this->navbar_organization,
 
             'roles' => $this->getRoleNames()->first(),
+
+            'band_id' => $this->band_id,
+            'brotherhood_id' => $this->brotherhood_id,
 
             'permissions' => [
                 'can_access_admin' => $this->hasRole('admin'),
