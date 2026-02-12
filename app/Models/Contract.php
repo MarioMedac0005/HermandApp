@@ -25,6 +25,12 @@ class Contract extends Model
         'procession_id'
     ];
 
+    protected $casts = [
+        'date' => 'datetime',
+        'signed_by_band_at' => 'datetime',
+        'signed_by_brotherhood_at' => 'datetime',
+    ];
+
     /**
      * Obtener la procesion de un contrato.
      */

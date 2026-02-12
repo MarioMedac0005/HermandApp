@@ -19,10 +19,10 @@ class AvailabilityResource extends JsonResource
             'date' => $this->date,
             'status' => $this->status,
             'description' => $this->description,
-            'band_id' => $this->band_id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            'deleted_at' => $this->deleted_at,
+            'band' => $this->whenLoaded('band'),
+            'created_at' => $this->created_at ? $this->created_at->format('d/m/Y H:i') : null,
+            'updated_at' => $this->updated_at ? $this->updated_at->format('d/m/Y H:i') : null,
+            'deleted_at' => $this->deleted_at ? $this->deleted_at->format('d/m/Y H:i') : null,
         ];
     }
 }

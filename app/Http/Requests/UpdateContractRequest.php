@@ -23,12 +23,10 @@ class UpdateContractRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'date' => ['nullable', 'date', 'after_or_equal:today'],
-            'status' => ['nullable', Rule::in(['expired', 'pending', 'active'])],
-            'amount' => ['nullable', 'numeric', 'min:0'],
-            'description' => ['nullable', 'string', 'max:2000'],
-            'band_id' => ['nullable', 'exists:bands,id'],
-            'procession_id' => ['nullable', 'exists:processions,id'],
+            'date' => ['sometimes', 'date', 'after:today'],
+            'amount' => ['sometimes', 'numeric', 'min:0'],
+            'description' => ['sometimes', 'string', 'max:2000'],
+            'procession_id' => ['sometimes', 'exists:processions,id'],
         ];
     }
 
@@ -36,13 +34,14 @@ class UpdateContractRequest extends FormRequest
     {
         return [
             'date.date' => 'La fecha no es válida.',
-            'date.after_or_equal' => 'La fecha debe ser hoy o posterior.',
-            'status.in' => 'El estado debe ser uno de los siguientes: "expired", "pending" o "active".',
-            'amount.numeric' => 'El monto debe ser un número.',
-            'amount.min' => 'El monto no puede ser negativo.',
-            'description.string' => 'La descripción debe ser una cadena de texto.',
-            'description.max' => 'La descripción no puede tener más de 2000 caracteres.',
-            'band_id.exists' => 'La banda seleccionada no existe.',
+            'date.after' => 'La fecha debe ser posterior a hoy.',
+
+            'amount.numeric' => 'El importe debe ser un número.',
+            'amount.min' => 'El importe no puede ser negativo.',
+
+            'description.string' => 'La descripción debe ser texto.',
+            'description.max' => 'La descripción no puede superar los 2000 caracteres.',
+
             'procession_id.exists' => 'La procesión seleccionada no existe.',
         ];
     }

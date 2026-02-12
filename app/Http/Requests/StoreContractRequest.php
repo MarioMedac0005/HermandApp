@@ -23,22 +23,12 @@ class StoreContractRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'date' => ['required', 'date'],
-
-            'status' => [
-                'nullable',
-                Rule::in(['expired', 'pending', 'active']),
-            ],
-
-            'amount' => ['nullable', 'numeric', 'min:0'],
-
-            'description' => ['nullable', 'string'],
-
+            'date' => ['required', 'date', 'after:today'],
+            'amount' => ['required', 'numeric', 'min:0'],
+            'description' => ['nullable', 'string', 'max:2000'],
             'band_id' => ['required', 'exists:bands,id'],
-
             'brotherhood_id' => ['required', 'exists:brotherhoods,id'],
-
-            'procession_id' => ['nullable', 'exists:processions,id'],
+            'procession_id' => ['required', 'exists:processions,id'],
         ];
     }
 
@@ -46,10 +36,10 @@ class StoreContractRequest extends FormRequest
     {
         return [
             'date.required' => 'La fecha del contrato es obligatoria.',
-            'date.date' => 'La fecha del contrato no es válida.',
+            'date.date' => 'La fecha no es válida.',
+            'date.after' => 'La fecha debe ser posterior a hoy.',
 
-            'status.in' => 'El estado debe ser: pendiente, activo o expirado.',
-
+            'amount.required' => 'El importe es obligatorio.',
             'amount.numeric' => 'El importe debe ser un número.',
             'amount.min' => 'El importe no puede ser negativo.',
 
@@ -59,7 +49,11 @@ class StoreContractRequest extends FormRequest
             'brotherhood_id.required' => 'La hermandad es obligatoria.',
             'brotherhood_id.exists' => 'La hermandad seleccionada no existe.',
 
+            'procession_id.required' => 'La procesión es obligatoria.',
             'procession_id.exists' => 'La procesión seleccionada no existe.',
+
+            'description.string' => 'La descripción debe ser texto.',
+            'description.max' => 'La descripción no puede superar los 2000 caracteres.',
         ];
     }
 }

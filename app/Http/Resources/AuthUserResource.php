@@ -25,8 +25,8 @@ class AuthUserResource extends JsonResource
 
             'roles' => $this->getRoleNames()->first(),
 
-            'band_id' => $this->band_id,
-            'brotherhood_id' => $this->brotherhood_id,
+            'band' => $this->whenLoaded('band'),
+            'brotherhood' => $this->whenLoaded('brotherhood'),
 
             'permissions' => [
                 'can_access_admin' => $this->hasRole('admin'),

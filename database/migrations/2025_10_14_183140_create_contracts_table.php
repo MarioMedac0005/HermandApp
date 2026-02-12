@@ -29,7 +29,7 @@ return new class extends Migration {
             $table->timestamp('signed_by_brotherhood_at')->nullable();
             $table->foreignId('band_id')->constrained()->onDelete('cascade');
             $table->foreignId('brotherhood_id')->constrained()->onDelete('cascade');
-            $table->foreignId('procession_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('procession_id')->constrained()->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

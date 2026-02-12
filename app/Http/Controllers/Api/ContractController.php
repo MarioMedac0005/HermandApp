@@ -23,9 +23,34 @@ class ContractController extends Controller
     {
         try {
 
-            $contract = Contract::paginate(10);
+            $user = Auth::user();
 
-            return ContractResource::collection($contract)
+            $query = Contract::with(['band', 'brotherhood', 'procession']);
+
+            if ($user->hasRole('admin')) {
+                
+            } else if ($user->hasRole('gestor')) {
+                if ($user->band_id) {
+                    $query->where('band_id', $user->band_id);
+                } else if ($user->brotherhood_id) {
+                    $query->where('brotherhood_id', $user->brotherhood_id);
+                } else {
+                    // Gestor sin asignación → no puede ver nada
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'No tienes contratos asignados.'
+                    ], 403);
+                }
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No tienes permisos para ver contratos.'
+                ], 403);
+            }
+
+            $contracts = $query->paginate(10);
+
+            return ContractResource::collection($contracts)
                 ->additional([
                     'success' => true,
                     'message' => 'Listado de contratos paginadas obtenido correctamente'
@@ -49,6 +74,8 @@ class ContractController extends Controller
         try {
 
             $contract = Contract::create($request->validated());
+
+            $contract->load(['band', 'brotherhood', 'procession']);
 
             return (new ContractResource($contract))
                 ->additional([
@@ -93,6 +120,8 @@ class ContractController extends Controller
         try {
 
             $contract->update($request->validated());
+
+            $contract->load(['band', 'brotherhood', 'procession']);
 
             return (new ContractResource($contract))
                 ->additional([
@@ -177,13 +206,11 @@ class ContractController extends Controller
 
                 // TODO: Generar el contrato en PDF
                 $pdfService = new PdfService();
-                $pdf = $pdfService->generateContract($contract);
+                $pdfFilename = $pdfService->generateContract($contract);
 
-                $filename = 'contracts/contract_' . $contract->id . '.pdf';
-                $pdf->save(storage_path('app/public/' . $filename));
-
-                $contract->pdf_path = $filename;
-                $contract->save();
+                $contract->update([
+                    'pdf_path' => $pdfFilename
+                ]);
 
             });
 

@@ -16,13 +16,10 @@ class ContractResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'date' => $this->date ? $this->date->format('d/m/Y H:i') : null,
+            'date' => $this->date,
             'status' => $this->status,
             'amount' => $this->amount,
             'description' => $this->description,
-            'band_id' => $this->band_id,
-            'brotherhood_id' => $this->brotherhood_id,
-            'procession_id' => $this->procession_id,
             'pdf_path' => $this->pdf_path ? asset('storage/' . $this->pdf_path) : null, // URL pública del PDF
             'band' => $this->whenLoaded('band'), // Puedes usar BandResource si quieres más detalle
             'brotherhood' => $this->whenLoaded('brotherhood'),

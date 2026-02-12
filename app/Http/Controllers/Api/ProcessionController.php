@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProcessionRequest;
 use App\Http\Requests\UpdateProcessionRequest;
 use App\Http\Resources\ProcessionResource;
+use Auth;
 
 class ProcessionController extends Controller
 {
@@ -16,7 +17,24 @@ class ProcessionController extends Controller
     public function index()
     {
         try {
-            $processions = Procession::paginate(10);
+
+            $user = auth()->user(); // null si no hay login
+
+            $query = Procession::query();
+
+            if ($user) {
+                if ($user->hasRole('admin')) {
+                    
+                } elseif ($user->hasRole('gestor')) {
+                    if ($user->brotherhood_id) {
+                        $query->where('brotherhood_id', $user->brotherhood_id);
+                    } else {
+                        $query->whereNull('id');
+                    }
+                }
+            }
+
+            $processions = $query->paginate(10);
 
             return ProcessionResource::collection($processions)
                 ->additional([

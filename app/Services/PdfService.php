@@ -23,17 +23,20 @@ class PdfService
             'date' => now()->format('d/m/Y'),
         ];
 
-        // Cargar la vista Blade y generar el PDF
         $pdf = Pdf::loadView('pdf.contract', $data);
 
-        // Definir nombre y ruta dentro de storage/app/public/contracts/
         $filename = 'contracts/contract_' . $contract->id . '.pdf';
-        $path = storage_path('app/public/' . $filename);
+        $folder = storage_path('app/public/contracts');
 
-        // Guardar el PDF en disco
+        // Crear carpeta si no existe
+        if (!file_exists($folder)) {
+            mkdir($folder, 0755, true);
+        }
+
+        $path = $folder . '/contract_' . $contract->id . '.pdf';
+
         $pdf->save($path);
 
-        // Devolver la ruta relativa para guardarla en la base de datos
         return $filename;
     }
 }
