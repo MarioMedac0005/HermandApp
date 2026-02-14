@@ -114,6 +114,10 @@ Route::middleware(['auth:sanctum', 'role:gestor|admin'])->group(function () {
     Route::apiResource('contracts', ContractController::class);
     Route::post('contracts/{contract}/accept', [ContractController::class, 'accept']);
     Route::post('contracts/{contract}/reject', [ContractController::class, 'reject']);
+    Route::post('contracts/{contract}/sign/band', [ContractController::class, 'signByBand']);
+    Route::post('contracts/{contract}/sign/brotherhood', [ContractController::class, 'signByBrotherhood']);
+    Route::get('contracts/{contract}/pdf-for-signing', [ContractController::class, 'getPdfForSigning']);
+    Route::get('contracts/{contract}/preview-original', [ContractController::class, 'previewOriginal']);
 });
 
 /*

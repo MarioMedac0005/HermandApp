@@ -25,6 +25,10 @@ return new class extends Migration {
             $table->decimal('amount', 10, 2)->nullable();
             $table->text('description')->nullable();
             $table->string('pdf_path')->nullable();
+            $table->string('band_signed_pdf_path')->nullable();
+            $table->string('brotherhood_signed_pdf_path')->nullable();
+            $table->string('band_signature_hash')->nullable();
+            $table->string('brotherhood_signature_hash')->nullable();
             $table->timestamp('signed_by_band_at')->nullable();
             $table->timestamp('signed_by_brotherhood_at')->nullable();
             $table->foreignId('band_id')->constrained()->onDelete('cascade');

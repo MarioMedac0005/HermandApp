@@ -13,6 +13,7 @@ use App\Services\PdfService;
 use Auth;
 use Carbon\Carbon;
 use DB;
+use Request;
 
 class ContractController extends Controller
 {
@@ -217,6 +218,10 @@ class ContractController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Contrato aceptado correctamente',
+                'data' => [
+                    'contract_id' => $contract->id,
+                    'pdf_path' => asset('storage/' . $contract->pdf_path)
+                ]
             ], 200);
 
             
@@ -265,4 +270,171 @@ class ContractController extends Controller
             );
         }
     }
+
+    public function signByBand(Contract $contract, Request $request)
+    {
+        $user = Auth::user();
+
+        // 1# Pertenece el usuario a la banda del contrato que quiere rechazar.
+        if ($user->band_id !== $contract->band_id) {
+            return $this->errorResponse(
+                'No puedes firmar este contrato',
+                'No pertenece el usuario a la banda del contrato que quiere firmar.'
+            );
+        }
+
+        // 2# Validar el estado del contrato.
+        if ($contract->status !== 'accepted') {
+            return $this->errorResponse(
+                'No puedes firmar este contrato',
+                'El contrato no se encuentra en estado aceptado.'
+            );
+        }
+
+        $request->validate([
+            'signed_pdf' => 'required|string',
+        ]);
+
+        $pdfBinary = base64_decode($request->signed_pdf);
+
+        $dir = storage_path('app/public/contracts/signed');
+        if (!file_exists($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
+        $filename = 'contracts/signed/band_contract_' . $contract->id . '.pdf';
+
+        file_put_contents(
+            storage_path('app/public/' . $filename),
+            $pdfBinary
+        );
+
+        $contract->update([
+            'band_signed_pdf_path' => $filename,
+            'band_signature_hash' => hash('sha256', $pdfBinary),
+            'signed_by_band_at' => now(),
+            'status' => 'signed_by_band'
+        ]);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Contrato firmado correctamente',
+        ], 200);
+    }
+
+    public function signByBrotherhood(Request $request, Contract $contract)
+    {
+        $user = Auth::user();
+
+        if ($user->brotherhood_id !== $contract->brotherhood_id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No puedes firmar este contrato.'
+            ], 403);
+        }
+
+        if ($contract->status !== 'signed_by_band') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Debe estar firmado por la banda primero.'
+            ], 400);
+        }
+
+        $request->validate([
+            'signed_pdf' => 'required|string'
+        ]);
+
+        $pdfBinary = base64_decode($request->signed_pdf);
+
+        $dir = storage_path('app/public/contracts/signed');
+        if (!file_exists($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
+        $filename = 'contracts/signed/final_contract_' . $contract->id . '.pdf';
+
+        file_put_contents(
+            storage_path('app/public/' . $filename),
+            $pdfBinary
+        );
+
+        $contract->update([
+            'brotherhood_signed_pdf_path' => $filename,
+            'brotherhood_signature_hash' => hash('sha256', $pdfBinary),
+            'signed_by_brotherhood_at' => now(),
+            'status' => 'completed'
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Contrato firmado por la hermandad correctamente.'
+        ]);
+    }
+
+    public function getPdfForSigning(Contract $contract)
+    {
+        $user = Auth::user();
+
+        if ($user->band_id === $contract->band_id) {
+            $path = $contract->pdf_path;
+        } 
+        elseif ($user->brotherhood_id === $contract->brotherhood_id) {
+            $path = $contract->band_signed_pdf_path;
+        } 
+        else {
+            return response()->json([
+                'success' => false,
+                'message' => 'No autorizado.'
+            ], 403);
+        }
+
+        if (!$path) {
+            return response()->json([
+                'success' => false,
+                'message' => 'PDF no disponible para firmar.'
+            ], 404);
+        }
+
+        $fullPath = storage_path('app/public/' . $path);
+
+        if (!file_exists($fullPath)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Archivo no encontrado.'
+            ], 404);
+        }
+
+        $pdfBinary = file_get_contents($fullPath);
+        $pdfBase64 = base64_encode($pdfBinary);
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'pdf_base64' => $pdfBase64
+            ]
+        ], 200);
+    }
+
+
+
+    public function previewOriginal(Contract $contract)
+    {
+        $path = $contract->pdf_path;
+
+        if (!file_exists(storage_path('app/public/' . $path))) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Contrato original no encontrado.'
+            ], 404);
+        }
+
+        $pdfBinary = file_get_contents(storage_path('app/public/' . $path));
+        $pdfBase64 = base64_encode($pdfBinary);
+
+        return response()->json([
+            'success' => true,
+            'pdf_path' => asset('storage/' . $path)
+        ]);
+    }
+
 }

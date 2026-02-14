@@ -20,6 +20,10 @@ class Contract extends Model
         'pdf_path',
         'signed_by_band_at',
         'signed_by_brotherhood_at',
+        'band_signed_pdf_path',
+        'brotherhood_signed_pdf_path',
+        'band_signature_hash',
+        'brotherhood_signature_hash',
         'band_id',
         'brotherhood_id',
         'procession_id'
