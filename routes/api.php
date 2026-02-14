@@ -1,24 +1,25 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-
-use App\Http\Resources\AuthUserResource;
+use App\Http\Controllers\Api\AvailabilityController;
 use App\Http\Controllers\Api\BandController;
 
-use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\Api\MediaController;
-use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Api\GestorController;
-use App\Http\Controllers\Api\SearchController;
-use App\Http\Controllers\Api\ContractController;
-use App\Http\Controllers\Api\FeaturedController;
-use App\Http\Controllers\Api\DashboardController;
-use App\Http\Controllers\Api\ProcessionController;
 use App\Http\Controllers\Api\BrotherhoodController;
-use App\Http\Controllers\Api\AvailabilityController;
-use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Api\ContactController;
+
+use App\Http\Controllers\Api\ContractController;
+use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\FeaturedController;
+use App\Http\Controllers\Api\GestorController;
+use App\Http\Controllers\Api\MediaController;
 use App\Http\Controllers\Api\OrganizationRequestController;
+use App\Http\Controllers\Api\ProcessionController;
+use App\Http\Controllers\Api\SearchController;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Resources\AuthUserResource;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,12 +37,15 @@ Route::get('/search', [SearchController::class, 'index']);
 Route::get('/featured', [FeaturedController::class, 'index']);
 Route::get('bands/{band}/booked-dates', [AvailabilityController::class, 'getBookedDates']);
 Route::post('/activate/{token}', [AuthController::class, 'activate']);
+Route::post('/contact', [ContactController::class, 'send']);
+
 
 // Rutas públicas de lectura
 Route::apiResource('bands', BandController::class)->only(['index', 'show']);
 Route::apiResource('brotherhoods', BrotherhoodController::class)->only(['index', 'show']);
 Route::apiResource('processions', ProcessionController::class)->only(['index', 'show']);
 Route::apiResource('availabilities', AvailabilityController::class)->only(['index', 'show']);
+
 
 Route::post('/password/forgot', [ResetPasswordController::class, 'sendResetLink']); // Pendiente
 Route::post('/reset-password', [ResetPasswordController::class, 'resetPassword']);  // Pendiente
