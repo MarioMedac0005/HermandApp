@@ -18,6 +18,7 @@ return new class extends Migration
             $table->enum('city', ['Almeria', 'Cadiz', 'Cordoba', 'Granada', 'Huelva', 'Jaen', 'Malaga', 'Sevilla'])->nullable();
             $table->string('rehearsal_space')->nullable();
             $table->string('email')->unique();
+            $table->string('stripe_account_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

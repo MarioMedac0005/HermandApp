@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\StripeController;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -118,7 +120,11 @@ Route::middleware(['auth:sanctum', 'role:gestor|admin'])->group(function () {
     Route::post('contracts/{contract}/sign/brotherhood', [ContractController::class, 'signByBrotherhood']);
     Route::get('contracts/{contract}/pdf-for-signing', [ContractController::class, 'getPdfForSigning']);
     Route::get('contracts/{contract}/preview-original', [ContractController::class, 'previewOriginal']);
+
+    Route::post('contracts/{contract}/create-payment', [StripeController::class, 'createPaymentSession']);
 });
+
+Route::post('webhook-stripe', [StripeController::class, 'handleWebhook']);
 
 /*
 |--------------------------------------------------------------------------

@@ -13,7 +13,7 @@ use App\Services\PdfService;
 use Auth;
 use Carbon\Carbon;
 use DB;
-use Request;
+use Illuminate\Http\Request;
 
 class ContractController extends Controller
 {
