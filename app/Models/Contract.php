@@ -16,10 +16,14 @@ class Contract extends Model
     const STATUS_PAID = 'paid';
 
     protected $fillable = [
-        'date',
-        'status',
+        'performance_type',
+        'performance_date',
+        'approximate_route',
+        'duration',
+        'minimum_musicians',
         'amount',
-        'description',
+        'additional_information',
+        'status',
         'pdf_path',
         'signed_by_band_at',
         'signed_by_brotherhood_at',
@@ -35,9 +39,10 @@ class Contract extends Model
     ];
 
     protected $casts = [
-        'date' => 'datetime',
+        'performance_date' => 'date',
         'signed_by_band_at' => 'datetime',
         'signed_by_brotherhood_at' => 'datetime',
+        'paid_at' => 'datetime',
     ];
 
     /**
@@ -64,4 +69,13 @@ class Contract extends Model
     {
         return $this->belongsTo(Brotherhood::class);
     }
+
+    /**
+     * Obtener la factura de un contrato.
+     */
+    public function invoice()
+    {
+        return $this->hasOne(Invoice::class);
+    }
+
 }

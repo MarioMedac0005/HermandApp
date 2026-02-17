@@ -12,7 +12,19 @@ return new class extends Migration {
     {
         Schema::create('contracts', function (Blueprint $table) {
             $table->id();
-            $table->datetime('date');
+            $table->enum('performance_type', [
+                'procession',
+                'concert',
+                'transfer',
+                'festival',
+                'other'
+            ]);
+            $table->date('performance_date');
+            $table->text('approximate_route')->nullable();
+            $table->integer('duration')->comment('Duration in minutes');
+            $table->integer('minimum_musicians')->comment('Minimum number of musicians required');
+            $table->decimal('amount', 10, 2)->nullable();
+            $table->text('additional_information')->nullable();
             $table->enum('status', [
                 'pending', // creado por la hermandad
                 'rejected', // rechazado por la banda
@@ -24,8 +36,6 @@ return new class extends Migration {
                 'payment_failed', // pago fallido
                 'expired', // expirado
             ])->default('pending');
-            $table->decimal('amount', 10, 2)->nullable();
-            $table->text('description')->nullable();
             $table->string('pdf_path')->nullable();
             $table->string('band_signed_pdf_path')->nullable();
             $table->string('brotherhood_signed_pdf_path')->nullable();
@@ -38,7 +48,7 @@ return new class extends Migration {
             $table->timestamp('paid_at')->nullable();
             $table->foreignId('band_id')->constrained()->onDelete('cascade');
             $table->foreignId('brotherhood_id')->constrained()->onDelete('cascade');
-            $table->foreignId('procession_id')->constrained()->onDelete('cascade');
+            $table->foreignId('procession_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

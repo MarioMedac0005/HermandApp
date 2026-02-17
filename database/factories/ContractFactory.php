@@ -19,23 +19,51 @@ class ContractFactory extends Factory
      */
     public function definition()
     {
+        $brotherhood = Brotherhood::inRandomOrder()->first() ?? Brotherhood::factory()->create();
+        $band = Band::inRandomOrder()->first() ?? Band::factory()->create();
 
-        // Primero elegimos un brotherhood al azar
-        $brotherhood = Brotherhood::all()->random();
+        $procession = Procession::where('brotherhood_id', $brotherhood->id)
+            ->inRandomOrder()
+            ->first();
 
-        // Si el brotherhood tiene procesiones, elegimos una al azar; si no, null
-        $procession = $brotherhood->processions->isNotEmpty()
-            ? $brotherhood->processions->random()
-            : null;
+        if (!$procession) {
+            $procession = Procession::factory()->create([
+                'brotherhood_id' => $brotherhood->id,
+            ]);
+        }
+
+        $performanceTypes = [
+            'procession',
+            'concert',
+            'transfer',
+            'festival',
+            'other',
+        ];
 
         return [
-            'date' => $this->faker->date(),
+            'performance_type' => $this->faker->randomElement($performanceTypes),
+
+            'performance_date' => $this->faker->dateTimeBetween('now', '+1 year'),
+
+            'approximate_route' => $this->faker->optional()->paragraph(),
+
+            'duration' => $this->faker->numberBetween(60, 600),
+
+            'minimum_musicians' => $this->faker->numberBetween(20, 120),
+
+            'amount' => $this->faker->randomFloat(2, 500, 15000),
+
+            'additional_information' => $this->faker->optional()->paragraph(),
+
             'status' => 'pending',
-            'amount' => $this->faker->randomFloat(2, 0, 10000),
-            'description' => $this->faker->text(),
-            'band_id' => Band::all()->random()->id,
+
+            'band_id' => $band->id,
             'brotherhood_id' => $brotherhood->id,
-            'procession_id' => $procession?->id, // null-safe operator
+            'procession_id' => $procession->id,
+
+            'signed_by_band_at' => null,
+            'signed_by_brotherhood_at' => null,
+            'paid_at' => null,
         ];
     }
 }

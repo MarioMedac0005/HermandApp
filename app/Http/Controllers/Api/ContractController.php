@@ -26,7 +26,7 @@ class ContractController extends Controller
 
             $user = Auth::user();
 
-            $query = Contract::with(['band', 'brotherhood', 'procession']);
+            $query = Contract::with(['band', 'brotherhood', 'procession', 'invoice']);
 
             if ($user->hasRole('admin')) {
                 
@@ -159,15 +159,13 @@ class ContractController extends Controller
         try {
             $user = Auth::user();
 
-            // 1# Pertenece el usuario a la banda del contrato que quiere aceptar.
             if ($user->band_id !== $contract->band_id) {
                 return $this->errorResponse(
                     'No puedes aceptar este contrato',
-                    'No pertenece el usuario a la banda del contrato que quiere aceptar.'
+                    'No pertenece el usuario a la banda del contrato.'
                 );
             }
 
-            // 2# Validar el estado del contrato.
             if ($contract->status !== 'pending') {
                 return $this->errorResponse(
                     'No puedes aceptar este contrato',
@@ -175,9 +173,8 @@ class ContractController extends Controller
                 );
             }
 
-            // 3# Verificar que la banda no esta ocupada el dia especificado en el contrato.
-            $fechaInicio = Carbon::parse($contract->date)->startOfDay();
-            $fechaFin = Carbon::parse($contract->date)->endOfDay();
+            $fechaInicio = Carbon::parse($contract->performance_date)->startOfDay();
+            $fechaFin = Carbon::parse($contract->performance_date)->endOfDay();
 
             $existe = Availability::where('band_id', $contract->band_id)
                 ->whereBetween('date', [$fechaInicio, $fechaFin])
@@ -186,52 +183,45 @@ class ContractController extends Controller
             if ($existe) {
                 return $this->errorResponse(
                     'No puedes aceptar este contrato',
-                    'La banda ya tiene un contrato en la fecha especificada.'
+                    'La banda ya tiene un contrato en esa fecha.'
                 );
             }
 
-            // # Transaccion para crear registros.
             DB::transaction(function () use ($contract) {
-                
-                // 1# Actualizar el estado del contrato.
+
                 $contract->update([
                     'status' => 'accepted'
                 ]);
 
-                // 2# Crear disponibilidad.
                 Availability::create([
                     'band_id' => $contract->band_id,
-                    'date' => $contract->date,
+                    'date' => $contract->performance_date,
                     'description' => 'Contrato #' . $contract->id,
                 ]);
 
-                // TODO: Generar el contrato en PDF
                 $pdfService = new PdfService();
                 $pdfFilename = $pdfService->generateContract($contract);
 
                 $contract->update([
                     'pdf_path' => $pdfFilename
                 ]);
-
             });
 
             return response()->json([
                 'success' => true,
                 'message' => 'Contrato aceptado correctamente',
-                'data' => [
-                    'contract_id' => $contract->id,
-                    'pdf_path' => asset('storage/' . $contract->pdf_path)
-                ]
+                'pdf_url' => asset('storage/' . $contract->pdf_path)
             ], 200);
 
-            
         } catch (\Throwable $th) {
-            return $this->errorResponse(
-                'Ha ocurrido un error al intentar aceptar el contrato',
-                $th->getMessage()
-            );
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al aceptar contrato',
+                'error' => $th->getMessage()
+            ], 500);
         }
     }
+
 
     public function reject(Contract $contract)
     {
@@ -405,36 +395,37 @@ class ContractController extends Controller
         }
 
         $pdfBinary = file_get_contents($fullPath);
-        $pdfBase64 = base64_encode($pdfBinary);
 
         return response()->json([
             'success' => true,
             'data' => [
-                'pdf_base64' => $pdfBase64
+                'pdf_base64' => base64_encode($pdfBinary)
             ]
         ], 200);
     }
 
-
-
     public function previewOriginal(Contract $contract)
     {
-        $path = $contract->pdf_path;
-
-        if (!file_exists(storage_path('app/public/' . $path))) {
+        if (!$contract->pdf_path) {
             return response()->json([
                 'success' => false,
-                'message' => 'Contrato original no encontrado.'
+                'message' => 'Este contrato aún no tiene PDF generado.'
             ], 404);
         }
 
-        $pdfBinary = file_get_contents(storage_path('app/public/' . $path));
-        $pdfBase64 = base64_encode($pdfBinary);
+        $fullPath = storage_path('app/public/' . $contract->pdf_path);
+
+        if (!file_exists($fullPath)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Archivo no encontrado en el servidor.'
+            ], 404);
+        }
 
         return response()->json([
             'success' => true,
-            'pdf_path' => asset('storage/' . $path)
-        ]);
+            'pdf_url' => asset('storage/' . $contract->pdf_path)
+        ], 200);
     }
 
 }

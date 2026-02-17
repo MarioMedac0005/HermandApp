@@ -26,7 +26,20 @@ class AuthUserResource extends JsonResource
             'roles' => $this->getRoleNames()->first(),
 
             'band' => $this->whenLoaded('band'),
-            'brotherhood' => $this->whenLoaded('brotherhood'),
+            'brotherhood' => $this->whenLoaded('brotherhood', function() {
+                return [
+                    'name' => $this->brotherhood->name,
+                    'processions' => $this->brotherhood->processions->map(function ($procession) {
+                        return [
+                            'id' => $procession->id,
+                            'name' => $procession->name,
+                            'itinerary' => $procession->itinerary,
+                            'checkout_time' => $procession->checkout_time,
+                            'checkin_time' => $procession->checkin_time,
+                        ];
+                    }),
+                ];
+            }),
 
             'permissions' => [
                 'can_access_admin' => $this->hasRole('admin'),

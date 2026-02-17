@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Band;
 use App\Models\Contract;
+use App\Models\Invoice;
 use Illuminate\Http\Request;
 use Stripe\Account;
 use Stripe\AccountLink;
@@ -146,24 +147,33 @@ class StripeController extends Controller
 
         switch ($event->type) {
 
-            case 'checkout.session.completed':
-                $session = $event->data->object;
+            case 'payment_intent.succeeded':
 
-                if ($session->mode !== 'payment') {
-                    return response()->json(['received' => true]);
-                }
+                $paymentIntent = $event->data->object;
 
-                $contractId = $session->metadata->contract_id ?? null;
+                $contractId = $paymentIntent->metadata->contract_id ?? null;
 
                 if ($contractId) {
                     $contract = Contract::find($contractId);
 
                     if ($contract && $contract->status !== Contract::STATUS_PAID) {
-
                         $contract->update([
                             'status' => Contract::STATUS_PAID,
                             'paid_at' => now(),
-                            'stripe_payment_intent_id' => $session->payment_intent
+                            'stripe_payment_intent_id' => $paymentIntent->id
+                        ]);
+                    }
+
+                    if (!$contract->invoice) {
+
+                        $nextId = (Invoice::max('id') ?? 0) + 1;
+
+                        Invoice::create([
+                            'contract_id' => $contract->id,
+                            'number' => 'FAC-' . str_pad($nextId, 4, '0', STR_PAD_LEFT),
+                            'amount' => $contract->amount,
+                            'commission_amount' => round($contract->amount * 0.05, 2),
+                            'issued_at' => now()
                         ]);
                     }
                 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\InvoiceController;
 use App\Http\Controllers\StripeController;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Http\Request;
@@ -124,6 +125,8 @@ Route::middleware(['auth:sanctum', 'role:gestor|admin'])->group(function () {
 
     Route::post('contracts/{contract}/create-payment', [StripeController::class, 'createPaymentSession']);
     Route::get('/stripe/account-status', [StripeController::class, 'checkStripeAccountStatus']);
+
+    Route::get('invoice/{invoice}/download', [InvoiceController::class, 'download']);
 });
 
 // Webhook de Stripe para recibir cuando el pago se ha completado

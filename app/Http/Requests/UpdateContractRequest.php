@@ -23,9 +23,38 @@ class UpdateContractRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'date' => ['sometimes', 'date', 'after:today'],
+            'performance_type' => [
+                'sometimes',
+                Rule::in(['procession', 'concert', 'transfer', 'festival', 'other']),
+            ],
+
+            'performance_date' => ['sometimes', 'date'],
+
+            'approximate_route' => ['nullable', 'string'],
+
+            'duration' => ['sometimes', 'integer', 'min:1'],
+
+            'minimum_musicians' => ['sometimes', 'integer', 'min:1'],
+
             'amount' => ['sometimes', 'numeric', 'min:0'],
-            'description' => ['sometimes', 'string', 'max:2000'],
+
+            'additional_information' => ['nullable', 'string'],
+
+            'status' => [
+                'sometimes',
+                Rule::in([
+                    'pending',
+                    'rejected',
+                    'accepted',
+                    'signed_by_band',
+                    'signed_by_brotherhood',
+                    'completed',
+                    'paid',
+                    'payment_failed',
+                    'expired',
+                ]),
+            ],
+
             'procession_id' => ['sometimes', 'exists:processions,id'],
         ];
     }
@@ -33,14 +62,20 @@ class UpdateContractRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'date.date' => 'La fecha no es válida.',
-            'date.after' => 'La fecha debe ser posterior a hoy.',
+            'performance_type.in' => 'El tipo de actuación no es válido.',
+
+            'performance_date.date' => 'La fecha de la actuación no es válida.',
+
+            'duration.integer' => 'La duración debe ser un número entero.',
+            'duration.min' => 'La duración debe ser mayor que 0.',
+
+            'minimum_musicians.integer' => 'El número mínimo de músicos debe ser un número entero.',
+            'minimum_musicians.min' => 'Debe haber al menos un músico.',
 
             'amount.numeric' => 'El importe debe ser un número.',
             'amount.min' => 'El importe no puede ser negativo.',
 
-            'description.string' => 'La descripción debe ser texto.',
-            'description.max' => 'La descripción no puede superar los 2000 caracteres.',
+            'status.in' => 'El estado del contrato no es válido.',
 
             'procession_id.exists' => 'La procesión seleccionada no existe.',
         ];
