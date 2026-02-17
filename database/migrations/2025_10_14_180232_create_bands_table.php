@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('rehearsal_space')->nullable();
             $table->string('email')->unique();
             $table->string('stripe_account_id')->nullable();
+            $table->boolean('stripe_onboarding_completed')
+              ->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

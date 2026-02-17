@@ -12,6 +12,9 @@ class Contract extends Model
     use SoftDeletes;
     use HasFactory;
 
+    const STATUS_COMPLETED = 'completed';
+    const STATUS_PAID = 'paid';
+
     protected $fillable = [
         'date',
         'status',
@@ -24,6 +27,8 @@ class Contract extends Model
         'brotherhood_signed_pdf_path',
         'band_signature_hash',
         'brotherhood_signature_hash',
+        'stripe_payment_intent_id',
+        'paid_at',
         'band_id',
         'brotherhood_id',
         'procession_id'

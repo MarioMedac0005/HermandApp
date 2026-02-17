@@ -92,6 +92,33 @@ class OrganizationRequestController extends Controller
                 'email' => $payload['organization']['email'],
             ]);
 
+            try {
+                $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+                $account = $stripe->accounts->create([
+                    'type' => 'express',
+                    'country' => 'ES', // Cambia según tu país
+                    'email' => $organization->email,
+                    'business_type' => 'company',
+                    'company' => [
+                        'name' => $organization->name,
+                    ],
+                    'capabilities' => [
+                        'card_payments' => ['requested' => true],
+                        'transfers' => ['requested' => true],
+                    ],
+                ]);
+
+                // Guardar el stripe_account_id en la banda
+                $organization->stripe_account_id = $account->id;
+                $organization->stripe_onboarding_completed = false;
+                $organization->save();
+
+            } catch (\Exception $e) {
+                // Manejo de error: puedes registrar o enviar notificación
+                report($e);
+                // Opcional: decidir si cancelar la creación de la banda o dejarla sin Stripe
+            }
+
             $user->band_id = $organization->id;
         }
 

@@ -21,6 +21,8 @@ class BandResource extends JsonResource
             'city' => $this->city,
             'rehearsal_space' => $this->rehearsal_space,
             'email' => $this->email,
+            'stripe_account_id' => $this->stripe_account_id,
+            'stripe_onboarding_completed' => $this->stripe_onboarding_completed,
 
             // Incluimos fechas formateadas
             'created_at' => $this->created_at?->toDateTimeString(),

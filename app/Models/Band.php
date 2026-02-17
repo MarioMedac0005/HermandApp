@@ -17,7 +17,9 @@ class Band extends Model
         'description',
         'city',
         'rehearsal_space',
-        'email'
+        'email',
+        'stripe_account_id',
+        'stripe_onboarding_completed',
     ];
 
     /**

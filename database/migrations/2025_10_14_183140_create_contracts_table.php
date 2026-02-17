@@ -21,6 +21,7 @@ return new class extends Migration {
                 'signed_by_brotherhood', // firmado por la hermandad
                 'completed', // firmado por ambos
                 'paid', // pagado
+                'payment_failed', // pago fallido
                 'expired', // expirado
             ])->default('pending');
             $table->decimal('amount', 10, 2)->nullable();
@@ -33,6 +34,8 @@ return new class extends Migration {
             $table->timestamp('signed_by_band_at')->nullable();
             $table->timestamp('signed_by_brotherhood_at')->nullable();
             $table->string('stripe_session_id')->nullable();
+            $table->string('stripe_payment_intent_id')->nullable();
+            $table->timestamp('paid_at')->nullable();
             $table->foreignId('band_id')->constrained()->onDelete('cascade');
             $table->foreignId('brotherhood_id')->constrained()->onDelete('cascade');
             $table->foreignId('procession_id')->constrained()->onDelete('cascade');

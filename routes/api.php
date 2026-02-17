@@ -90,6 +90,7 @@ Route::middleware('auth:sanctum')->group(function () {
     |
     */
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('stripe/onboarding-link', [StripeController::class, 'createOnboardingLink']);
 });
 
 /*
@@ -122,8 +123,10 @@ Route::middleware(['auth:sanctum', 'role:gestor|admin'])->group(function () {
     Route::get('contracts/{contract}/preview-original', [ContractController::class, 'previewOriginal']);
 
     Route::post('contracts/{contract}/create-payment', [StripeController::class, 'createPaymentSession']);
+    Route::get('/stripe/account-status', [StripeController::class, 'checkStripeAccountStatus']);
 });
 
+// Webhook de Stripe para recibir cuando el pago se ha completado
 Route::post('webhook-stripe', [StripeController::class, 'handleWebhook']);
 
 /*
