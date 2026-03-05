@@ -31,14 +31,14 @@ class SearchController extends Controller
                     ->get()
                     ->map(function ($band) {
                         return [
-                            'id'          => $band->id,
-                            'name'        => $band->name,
+                            'id' => $band->id,
+                            'name' => $band->name,
                             'description' => $band->description,
-                            'city'        => $band->city,
-                            'email'       => $band->email,
-                            'type'        => 'band',
+                            'city' => $band->city,
+                            'email' => $band->email,
+                            'type' => 'band',
                             'banner' => $band->banner?->url ?? null,
-                            'created_at'  => $band->created_at,
+                            'created_at' => $band->created_at,
                         ];
                     });
 
@@ -56,14 +56,14 @@ class SearchController extends Controller
                     ->get()
                     ->map(function ($h) {
                         return [
-                            'id'          => $h->id,
-                            'name'        => $h->name,
+                            'id' => $h->id,
+                            'name' => $h->name,
                             'description' => $h->description,
-                            'city'        => $h->city,
-                            'email'       => $h->email,
-                            'type'        => 'brotherhood',
-                            'banner'      => $h->banner?->url ?? null,
-                            'created_at'  => $h->created_at,
+                            'city' => $h->city,
+                            'email' => $h->email,
+                            'type' => 'brotherhood',
+                            'banner' => $h->banner?->url ?? null,
+                            'created_at' => $h->created_at,
                         ];
                     });
 

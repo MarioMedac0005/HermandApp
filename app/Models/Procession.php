@@ -15,8 +15,12 @@ class Procession extends Model
 
     protected $fillable = [
         'name',
+        'description',
         'type',
-        'itinerary',
+        'status',
+        'distance',
+        'points_count',
+        'preview_url',
         'checkout_time',
         'checkin_time',
         'brotherhood_id'
@@ -36,5 +40,21 @@ class Procession extends Model
     public function contracts(): HasMany
     {
         return $this->hasMany(Contract::class);
+    }
+
+    /**
+     * Get the segments for the procession.
+     */
+    public function segments(): HasMany
+    {
+        return $this->hasMany(Segment::class);
+    }
+
+    /**
+     * Get the points of interest for the procession.
+     */
+    public function pointsOfInterest(): HasMany
+    {
+        return $this->hasMany(PointOfInterest::class);
     }
 }

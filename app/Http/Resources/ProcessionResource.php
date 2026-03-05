@@ -17,15 +17,20 @@ class ProcessionResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'description' => $this->description,
             'type' => $this->type,
-            'itinerary' => $this->itinerary,
+            'status' => $this->status,
+            'distance' => $this->distance,
+            'points_count' => $this->points_count,
+            'preview_url' => $this->preview_url,
             'checkout_time' => $this->checkout_time,
             'checkin_time' => $this->checkin_time,
-            'brotherhood' => $this->whenLoaded('brotherhood'),
-            'contracts' => $this->whenLoaded('contracts'),
+            'brotherhood_id' => $this->brotherhood_id,
+            'brotherhood' => new BrotherhoodResource($this->whenLoaded('brotherhood')),
+            'tramos' => SegmentResource::collection($this->whenLoaded('segments')),
+            'points' => PointOfInterestResource::collection($this->whenLoaded('pointsOfInterest')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'deleted_at' => $this->deleted_at,
         ];
     }
 }

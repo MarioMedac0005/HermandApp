@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -14,15 +13,18 @@ return new class extends Migration
         Schema::create('processions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->enum('type', ['christ', 'virgin']);
-            $table->text('itinerary');
+            $table->text('description')->nullable();
+            $table->enum('type', ['christ', 'virgin', 'other']);
+            $table->enum('status', ['draft', 'published'])->default('draft');
+            $table->float('distance')->default(0);
+            $table->integer('points_count')->default(0);
+            $table->string('preview_url')->nullable();
             $table->datetime('checkout_time');
             $table->datetime('checkin_time');
             $table->foreignId('brotherhood_id')->constrained();
             $table->timestamps();
             $table->softDeletes();
         });
-        
     }
 
     /**

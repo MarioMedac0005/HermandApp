@@ -17,11 +17,10 @@ class ProcessionFactory extends Factory
      */
     public function definition(): array
     {
-           $type = ['christ', 'virgin'];
+        $type = ['christ', 'virgin'];
         return [
             'name' => fake()->name(),
             'type' => fake()->randomElement($type),
-            'itinerary' => fake()->text(),
             'checkout_time' => fake()->dateTime(),
             'checkin_time' => fake()->dateTime(),
             'brotherhood_id' => Brotherhood::all()->random()->id

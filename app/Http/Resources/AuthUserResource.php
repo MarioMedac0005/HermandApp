@@ -19,6 +19,8 @@ class AuthUserResource extends JsonResource
             'name' => $this->name,
 
             'panel' => $this->panel,
+            'brotherhood_id' => $this->brotherhood_id,
+            'band_id' => $this->band_id,
 
             'avatar' => $this->navbar_avatar,
             'organization' => $this->navbar_organization,
@@ -26,14 +28,14 @@ class AuthUserResource extends JsonResource
             'roles' => $this->getRoleNames()->first(),
 
             'band' => $this->whenLoaded('band'),
-            'brotherhood' => $this->whenLoaded('brotherhood', function() {
+            'brotherhood' => $this->whenLoaded('brotherhood', function () {
                 return [
+                    'id' => $this->brotherhood->id,
                     'name' => $this->brotherhood->name,
                     'processions' => $this->brotherhood->processions->map(function ($procession) {
                         return [
                             'id' => $procession->id,
                             'name' => $procession->name,
-                            'itinerary' => $procession->itinerary,
                             'checkout_time' => $procession->checkout_time,
                             'checkin_time' => $procession->checkin_time,
                         ];
