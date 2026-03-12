@@ -35,6 +35,9 @@ class BandResource extends JsonResource
             'media' => MediaResource::collection(
                 $this->whenLoaded('media')
             ),
+            'songs' => SongResource::collection(
+                $this->whenLoaded('songs')
+            ),
         ];
     }
 }

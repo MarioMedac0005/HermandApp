@@ -66,7 +66,7 @@ class BandController extends Controller
     public function show(Band $band)
     {
         try {
-            $band->load('media');
+            $band->load(['media', 'songs']);
 
             return (new BandResource($band))
                 ->additional([

@@ -47,6 +47,14 @@ class Band extends Model
     }
 
     /**
+     * Obtener el repertorio de una banda.
+     */
+    public function songs(): HasMany
+    {
+        return $this->hasMany(Song::class);
+    }
+
+    /**
      * Relación polimórfica con Media
      */
     public function media()

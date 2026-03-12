@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\ProcessionController;
 use App\Http\Controllers\Api\BrotherhoodController;
 use App\Http\Controllers\Api\AvailabilityController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Api\SongController;
 use App\Http\Controllers\Api\OrganizationRequestController;
 
 /*
@@ -38,6 +39,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::get('/search', [SearchController::class, 'index']);
 Route::get('/featured', [FeaturedController::class, 'index']);
 Route::get('bands/{band}/booked-dates', [AvailabilityController::class, 'getBookedDates']);
+Route::get('bands/{band}/repertoire', [SongController::class, 'index']);
 
 // Rutas públicas de lectura
 Route::apiResource('bands', BandController::class)->only(['index', 'show']);
@@ -126,6 +128,9 @@ Route::middleware(['auth:sanctum', 'role:gestor|admin'])->group(function () {
     Route::get('/stripe/account-status', [StripeController::class, 'checkStripeAccountStatus']);
 
     Route::get('invoice/{invoice}/download', [InvoiceController::class, 'download']);
+
+    // Gestión de repertorio
+    Route::apiResource('repertoire', SongController::class)->only(['store', 'update', 'destroy']);
 });
 
 // Webhook de Stripe para recibir cuando el pago se ha completado
@@ -150,3 +155,4 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
 
     Route::apiResource('organization-requests', OrganizationRequestController::class)->only(['index', 'show', 'update']);
 });
+
