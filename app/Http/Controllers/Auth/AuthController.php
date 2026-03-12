@@ -10,8 +10,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\AuthUserResource;
-use App\Http\Requests\ActivateAccountRequest;
 use App\Http\Requests\StoreOrganizationRequest;
+use Illuminate\Support\Facades\Password;
 
 class AuthController extends Controller
 {
@@ -65,35 +65,6 @@ class AuthController extends Controller
 
         return response()->json([
             'success' => true,
-        ]);
-    }
-
-    public function activate(ActivateAccountRequest $request, string $token)
-    {
-        $user = User::where('activation_token', $token)->first();
-
-        if (!$user) {
-            return response()->json([
-                'message' => 'El enlace de activación no es válido.'
-            ], 404);
-        }
-
-        if ($user->activation_token_expires_at && $user->activation_token_expires_at->isPast()) {
-            return response()->json([
-                'message' => 'El enlace de activación ha expirado.'
-            ], 410);
-        }
-
-        DB::transaction(function () use ($user, $request) {
-            $user->update([
-                'password' => Hash::make($request->password),
-                'activation_token' => null,
-                'activation_token_expires_at' => null,
-            ]);
-        });
-
-        return response()->json([
-            'message' => 'Cuenta activada correctamente. Ya puedes iniciar sesión.'
         ]);
     }
 }

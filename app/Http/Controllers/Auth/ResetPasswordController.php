@@ -64,6 +64,10 @@ class ResetPasswordController extends Controller
                     'password' => Hash::make($password)
                 ])->setRememberToken(Str::random(60));
     
+                if (!$user->hasVerifiedEmail()) {
+                    $user->markEmailAsVerified();
+                }
+
                 $user->save();
     
                 event(new PasswordReset($user));

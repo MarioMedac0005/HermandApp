@@ -38,7 +38,6 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::get('/search', [SearchController::class, 'index']);
 Route::get('/featured', [FeaturedController::class, 'index']);
 Route::get('bands/{band}/booked-dates', [AvailabilityController::class, 'getBookedDates']);
-Route::post('/activate/{token}', [AuthController::class, 'activate']);
 
 // Rutas públicas de lectura
 Route::apiResource('bands', BandController::class)->only(['index', 'show']);

@@ -33,8 +33,6 @@ class User extends Authenticatable
         'password',
         'band_id',
         'brotherhood_id',
-        'activation_token',
-        'activation_token_expires_at',
     ];
 
 
@@ -58,7 +56,6 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'activation_token_expires_at' => 'datetime',
         ];
     }
 

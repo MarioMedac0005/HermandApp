@@ -11,7 +11,8 @@ use App\Models\OrganizationRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\OrganizationApprovedMail;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Password;
 use App\Mail\OrganizationRejectedMail;
 use App\Http\Requests\ReviewOrganizationRequest;
 use App\Http\Resources\OrganizationRequestResource;
@@ -73,14 +74,10 @@ class OrganizationRequestController extends Controller
     {
         $payload = $organizationRequest->payload;
 
-        $token = Str::uuid();
-
         $user = User::create([
             'name' => $payload['user']['name'],
             'surname' => $payload['user']['surname'] ?? null,
             'email' => $payload['user']['email'],
-            'activation_token' => $token,
-            'activation_token_expires_at' => now()->addDays(2),
         ]);
 
         if ($organizationRequest->type === 'band') {
@@ -135,11 +132,9 @@ class OrganizationRequestController extends Controller
         }
 
         $user->save();
-        $activationUrl = config('app.frontend_url') . '/activate/' . $token;
+        $user->assignRole('gestor');
 
-        Mail::to($user->email)->send(
-            new OrganizationApprovedMail($user, $activationUrl)
-        );
+        Password::sendResetLink(['email' => $user->email]);
     }
 
     /**
