@@ -80,5 +80,49 @@ class UserSeeder extends Seeder
         ]);
 
         $adminHermandad->assignRole('gestor');
+
+        $javierRuiz = User::create([
+            'name' => 'Javier',
+            'surname' => 'Ruiz',
+            'email' => 'javier.ruiz@davante.es',
+            'password' => Hash::make('password'),
+            'band_id' => null,
+            'brotherhood_id' => null
+        ]);
+
+        $javierRuiz->assignRole('admin');
+
+        $pabloSantaella = User::create([
+            'name' => 'Pablo',
+            'surname' => 'Santaella',
+            'email' => 'pablo.santaella@davante.es',
+            'password' => Hash::make('password'),
+            'band_id' => null,
+            'brotherhood_id' => null
+        ]);
+
+        $pabloSantaella->assignRole('admin');
+
+        $sergioDiaz = User::create([
+            'name' => 'Sergio',
+            'surname' => 'Diaz',
+            'email' => 'sergio.diaz@davante.es',
+            'password' => Hash::make('password'),
+            'band_id' => null,
+            'brotherhood_id' => null
+        ]);
+
+        $sergioDiaz->assignRole('admin');
+
+        $virginiaMilan = User::create([
+            'name' => 'Virginia',
+            'surname' => 'Diaz',
+            'email' => 'virginia.diaz@davante.es',
+            'password' => Hash::make('password'),
+            'band_id' => null,
+            'brotherhood_id' => null
+        ]);
+
+        $virginiaMilan->assignRole('admin');
     }
 }
