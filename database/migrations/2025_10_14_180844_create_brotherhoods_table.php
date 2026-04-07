@@ -14,10 +14,13 @@ return new class extends Migration
         Schema::create('brotherhoods', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->text('description')->nullable();
             $table->enum('city', ['Almeria', 'Cadiz', 'Cordoba', 'Granada', 'Huelva', 'Jaen', 'Malaga', 'Sevilla']);
             $table->string('office');
             $table->string('phone_number')->nullable();
             $table->string('email')->nullable()->unique();
+            $table->integer('nazarenes')->nullable();
+            $table->year('year_of_founding')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

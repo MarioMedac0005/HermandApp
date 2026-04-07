@@ -19,7 +19,7 @@ class AuthUserResource extends JsonResource
             'name' => $this->name,
             'surname' => $this->surname,
             'email' => $this->email,
-            
+
             'panel' => $this->panel,
             'brotherhood_id' => $this->brotherhood_id,
             'band_id' => $this->band_id,
@@ -31,18 +31,19 @@ class AuthUserResource extends JsonResource
 
             'band' => $this->whenLoaded('band'),
             'brotherhood' => $this->whenLoaded('brotherhood', function () {
-                return [
-                    'id' => $this->brotherhood->id,
-                    'name' => $this->brotherhood->name,
-                    'processions' => $this->brotherhood->processions->map(function ($procession) {
-                        return [
-                            'id' => $procession->id,
-                            'name' => $procession->name,
-                            'checkout_time' => $procession->checkout_time,
-                            'checkin_time' => $procession->checkin_time,
-                        ];
-                    }),
-                ];
+                return array_merge(
+                    $this->brotherhood->toArray(),
+                    [
+                        'processions' => $this->brotherhood->processions->map(function ($procession) {
+                            return [
+                                'id' => $procession->id,
+                                'name' => $procession->name,
+                                'checkout_time' => $procession->checkout_time,
+                                'checkin_time' => $procession->checkin_time,
+                            ];
+                        }),
+                    ]
+                );
             }),
 
             'permissions' => [

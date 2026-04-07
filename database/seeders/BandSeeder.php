@@ -14,13 +14,13 @@ class BandSeeder extends Seeder
      */
     public function run(): void
     {
-        // // Clave secreta de Stripe
-        // $stripeSecret = env('STRIPE_SECRET');
-        // if (!$stripeSecret) {
-        //     throw new \Exception("Stripe secret key not found in .env");
-        // }
+        // Clave secreta de Stripe
+        $stripeSecret = env('STRIPE_SECRET');
+        if (!$stripeSecret) {
+            throw new \Exception("Stripe secret key not found in .env");
+        }
 
-        // $stripe = new StripeClient($stripeSecret);
+        $stripe = new StripeClient($stripeSecret);
 
         $bandsData = [
             [
@@ -57,22 +57,22 @@ class BandSeeder extends Seeder
             // Crear la banda en la base de datos
             $band = Band::create($data);
 
-            // // Crear la cuenta Stripe asociada a la banda
-            // $stripeAccount = $stripe->accounts->create([
-            //     'type' => 'express',
-            //     'email' => $band->email,
-            //     'business_type' => 'company',
-            //     'company' => [
-            //         'name' => $band->name,
-            //     ],
-            //     'capabilities' => [
-            //         'card_payments' => ['requested' => true],
-            //         'transfers' => ['requested' => true],
-            //     ],
-            // ]);
+            // Crear la cuenta Stripe asociada a la banda
+            $stripeAccount = $stripe->accounts->create([
+                'type' => 'express',
+                'email' => $band->email,
+                'business_type' => 'company',
+                'company' => [
+                    'name' => $band->name,
+                ],
+                'capabilities' => [
+                    'card_payments' => ['requested' => true],
+                    'transfers' => ['requested' => true],
+                ],
+            ]);
 
-            // // Guardar el ID de Stripe en la banda
-            // $band->stripe_account_id = $stripeAccount->id;
+            // Guardar el ID de Stripe en la banda
+            $band->stripe_account_id = $stripeAccount->id;
             $band->save();
         }
     }

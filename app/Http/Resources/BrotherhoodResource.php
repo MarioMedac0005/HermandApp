@@ -17,10 +17,13 @@ class BrotherhoodResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'description' => $this->description,
             'city' => $this->city,
             'office' => $this->office,
             'phone_number' => $this->phone_number,
             'email' => $this->email,
+            'nazarenes' => $this->nazarenes,
+            'year_of_founding' => $this->year_of_founding,
             'created_at' => $this->created_at?->toDateTimeString(),
             'updated_at' => $this->updated_at?->toDateTimeString(),
             'deleted_at' => $this->deleted_at?->toDateTimeString(),
