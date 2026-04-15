@@ -42,13 +42,23 @@ class ResetPasswordNotification extends Notification
             '&email=' . urlencode($notifiable->email);
 
         return (new MailMessage)
-            ->subject('Restablece tu contraseña en HermandApp')
-            ->greeting('Hola ' . $notifiable->name . '!')
-            ->line('Has recibido este correo electrónico porque has solicitado ser gestor en HermandApp. Para ello te hemos enviado este correo para que puedas establecer la contraseña de tu nueva cuenta.')
+            ->subject('Restablecimiento de contraseña - HermandApp')
+
+            ->greeting('Hola ' . $notifiable->name . ',')
+
+            ->line('Hemos recibido una solicitud para restablecer la contraseña de tu cuenta en HermandApp.')
+
+            ->line('Puedes establecer una nueva contraseña haciendo clic en el siguiente botón:')
+
             ->action('Restablecer contraseña', $resetUrl)
-            ->line('Este enlace expirará en 60 minutos.')
-            ->line('Si no solicitaste este cambio, ignora este correo.')
-            ->line('Gracias por usar HermandApp!');
+
+            ->line('Por motivos de seguridad, este enlace expirará en 60 minutos.')
+
+            ->line('Si no solicitaste este cambio, puedes ignorar este mensaje. Tu contraseña actual seguirá siendo válida y no se realizará ninguna modificación.')
+
+            ->line('Si tienes cualquier problema o duda, te recomendamos contactar con nuestro equipo de soporte.')
+
+            ->salutation('Atentamente,' . "\n" . 'Equipo de HermandApp');
     }
 
     /**

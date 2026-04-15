@@ -37,7 +37,6 @@ class AvailabilityController extends Controller
     {
         try {
             $dates = Availability::where('band_id', $band->id)
-                ->where('status', 'occupied')
                 ->pluck('date')
                 ->map(fn ($date) => Carbon::parse($date)->format('Y-m-d'))
                 ->values();

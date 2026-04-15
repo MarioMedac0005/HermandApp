@@ -3,7 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Availability;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Band;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class AvailabilitySeeder extends Seeder
@@ -13,6 +14,27 @@ class AvailabilitySeeder extends Seeder
      */
     public function run(): void
     {
-        Availability::factory(20)->create();
+        $bands = Band::all();
+
+        foreach ($bands as $band) {
+            for ($mes = 1; $mes <= 12; $mes++) { 
+                $fechas = collect();
+
+                while ($fechas->count() < 7) {
+                    $fecha = Carbon::create(null, $mes, rand(1, 28));
+
+                    $fechas->add($fecha->format('Y-m-d'));
+                    $fechas = $fechas->unique();
+                }
+
+                foreach ($fechas as $fecha) {
+                    Availability::create([
+                        'band_id' => $band->id,
+                        'date' => $fecha,
+                        'description' => fake()->text()
+                    ]);
+                }
+            }
+        }
     }
 }
