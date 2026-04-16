@@ -129,12 +129,8 @@ return [
 
     'middleware' => [
         'web',
-        'auth.basic',
-        'throttle:6,1',
         RestrictedDocsAccess::class,
     ],
 
     'extensions' => [],
-
-    'authorize' => 'viewApiDocs',
 ];
