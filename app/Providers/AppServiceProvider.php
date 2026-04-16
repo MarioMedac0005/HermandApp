@@ -26,16 +26,5 @@ class AppServiceProvider extends ServiceProvider
             // ! Durante desarrollo: URL genérica de prueba
             return url('/api/password/reset?token=' . $token . '&email=' . urlencode($user->email));
         });
-
-        /* Scramble::configure()
-            ->withDocumentTransformers(function (OpenApi $openApi) {
-                $openApi->secure(
-                    SecurityScheme::http('bearer')
-                );
-            }); */
-
-        Gate::define('viewApiDocs', function (User $user) {
-            return $user->hasRole('admin');
-        });
     }
 }
