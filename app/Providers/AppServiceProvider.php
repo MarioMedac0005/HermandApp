@@ -30,12 +30,12 @@ class AppServiceProvider extends ServiceProvider
             return url('/api/password/reset?token=' . $token . '&email=' . urlencode($user->email));
         });
 
-        Scramble::configure()
+        /* Scramble::configure()
             ->withDocumentTransformers(function (OpenApi $openApi) {
                 $openApi->secure(
                     SecurityScheme::http('bearer')
                 );
-            });
+            }); */
 
         Gate::define('viewApiDocs', function (User $user) {
             return $user->hasRole('admin');
