@@ -29,7 +29,7 @@ return [
         /*
          * Description rendered on the home page of the API documentation (`/docs/api`).
          */
-        'description' => '',
+        'description' => 'Documentación oficial sobre la API de HermandApp',
     ],
 
     /*
@@ -54,12 +54,12 @@ return [
         /*
          * Hide the schemas in the Table of Contents. Enabled by default.
          */
-        'hide_schemas' => false,
+        'hide_schemas' => true,
 
         /*
          * URL to an image that displays as a small square logo next to the title, above the table of contents.
          */
-        'logo' => '',
+        'logo' => asset('img/logo.png'),
 
         /*
          * Use to fetch the credential policy for the Try It feature. Options are: omit, include (default), and same-origin
