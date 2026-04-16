@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Queue\Jobs\FakeJob;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Brotherhood>
@@ -19,10 +20,13 @@ class BrotherhoodFactory extends Factory
 
         return [
             'name' => fake()->name(),
+            'description' => fake()->text(),
             'city' => fake()->randomElement(['Almeria', 'Cadiz', 'Cordoba', 'Granada', 'Huelva', 'Jaen', 'Malaga', 'Sevilla']),
             'office' => fake()->address(),
             'phone_number' => fake()->phoneNumber(),
             'email' => fake()->email(),
+            'nazarenes' => fake()->numberBetween(1000, 2500),
+            'year_of_founding' => fake()->year(),
         ];
     }
 }

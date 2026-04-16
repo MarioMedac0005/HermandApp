@@ -21,8 +21,8 @@ class UserResource extends JsonResource
             'type' => $this->type,
             'band_id' => $this->band_id,
             'brotherhood_id' => $this->brotherhood_id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'created_at' => $this->created_at?->format('d/m/Y H:i'),
+            'updated_at' => $this->updated_at?->format('d/m/Y H:i'),
 
             // Relaciones opcionales, si existen:
             'band' => new BandResource($this->whenLoaded('band')),

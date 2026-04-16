@@ -16,13 +16,15 @@ class AvailabilityResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'date' => $this->date,
-            'status' => $this->status,
+            'date' => $this->date?->format('d/m/Y'),
             'description' => $this->description,
-            'band' => $this->whenLoaded('band'),
-            'created_at' => $this->created_at ? $this->created_at->format('d/m/Y H:i') : null,
-            'updated_at' => $this->updated_at ? $this->updated_at->format('d/m/Y H:i') : null,
-            'deleted_at' => $this->deleted_at ? $this->deleted_at->format('d/m/Y H:i') : null,
+            'band' => [
+                'id' => $this->band_id,
+                'name' => $this->band?->name,
+            ],
+            'created_at' => $this->created_at?->format('d/m/Y H:i'),
+            'updated_at' => $this->updated_at?->format('d/m/Y H:i'),
+            'deleted_at' => $this->deleted_at?->format('d/m/Y H:i'),
         ];
     }
 }

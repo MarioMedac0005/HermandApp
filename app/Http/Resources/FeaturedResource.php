@@ -21,6 +21,8 @@ class FeaturedResource extends JsonResource
             'city' => $this->city,
             'type' => strtolower(class_basename($this->resource)),
             'image' => $this->banner?->url,
+            'created_at' => $this->created_at?->format('d/m/Y H:i'),
+            'updated_at' => $this->updated_at?->format('d/m/Y H:i'),
         ];
     }
 }

@@ -24,6 +24,8 @@ class PointOfInterestResource extends JsonResource
             'icon' => $this->icon,
             'color' => $this->color,
             'show_label' => $this->show_label,
+            'created_at' => $this->created_at?->format('d/m/Y H:i'),
+            'updated_at' => $this->updated_at?->format('d/m/Y H:i'),
         ];
     }
 }

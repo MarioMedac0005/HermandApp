@@ -20,6 +20,8 @@ class SongResource extends JsonResource
             'duration' => $this->duration,
             'url' => $this->url,
             'band_id' => $this->band_id,
+            'created_at' => $this->created_at?->format('d/m/Y H:i'),
+            'updated_at' => $this->updated_at?->format('d/m/Y H:i'),
         ];
     }
 }

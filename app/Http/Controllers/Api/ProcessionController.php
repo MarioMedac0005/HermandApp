@@ -8,8 +8,6 @@ use App\Http\Requests\StoreProcessionRequest;
 use App\Http\Requests\UpdateProcessionRequest;
 use App\Http\Resources\ProcessionResource;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-use Auth;
 
 class ProcessionController extends Controller
 {
@@ -60,7 +58,7 @@ class ProcessionController extends Controller
                 $query->orderBy('checkout_time', 'desc');
             }
 
-            $processions = $query->with(['segments', 'pointsOfInterest'])->paginate(6);
+            $processions = $query->with(['brotherhood', 'segments', 'pointsOfInterest'])->paginate(6);
 
             return ProcessionResource::collection($processions)
                 ->additional([
@@ -89,7 +87,7 @@ class ProcessionController extends Controller
                     $this->handlePreviewUpload($procession, $request->file('preview'));
                 }
 
-                return (new ProcessionResource($procession->load(['segments', 'pointsOfInterest'])))
+                return (new ProcessionResource($procession->load(['brotherhood', 'segments', 'pointsOfInterest'])))
                     ->additional([
                         'success' => true,
                         'message' => 'La procesion ha sido creada correctamente'
@@ -124,7 +122,7 @@ class ProcessionController extends Controller
                 }
             }
 
-            return (new ProcessionResource($procession->load(['segments', 'pointsOfInterest'])))
+            return (new ProcessionResource($procession->load(['brotherhood', 'segments', 'pointsOfInterest'])))
                 ->additional([
                     'success' => true,
                     'message' => 'La procesión ha sido obtenida correctamente',
@@ -155,7 +153,7 @@ class ProcessionController extends Controller
                     $this->handlePreviewUpload($procession, $request->file('preview'));
                 }
 
-                return (new ProcessionResource($procession->load(['segments', 'pointsOfInterest'])))
+                return (new ProcessionResource($procession->load(['brotherhood', 'segments', 'pointsOfInterest'])))
                     ->additional([
                         'success' => true,
                         'message' => 'La procesión ha sido actualizada correctamente',

@@ -60,7 +60,6 @@ class ContractResource extends JsonResource
             // Fechas del sistema
             'created_at' => $this->created_at?->format('d/m/Y H:i'),
             'updated_at' => $this->updated_at?->format('d/m/Y H:i'),
-            'deleted_at' => $this->deleted_at?->format('d/m/Y H:i'),
         ];
     }
 }

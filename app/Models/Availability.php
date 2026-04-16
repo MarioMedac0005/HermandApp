@@ -22,6 +22,10 @@ class Availability extends Model
         'date'
     ];
 
+    protected $casts = [
+        'date' => 'datetime',
+    ];
+
     /**
      * Obtener la banda de una disponibilidad.
      */

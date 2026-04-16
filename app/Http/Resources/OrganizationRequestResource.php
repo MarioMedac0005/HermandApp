@@ -23,7 +23,7 @@ class OrganizationRequestResource extends JsonResource
             'admin_notes' => $this->admin_notes,
             'approved_at' => $this->approved_at,
             'approved_by' => $this->approvedBy?->name,
-            'created_at' => $this->created_at?->toDateTimeString(),
+            'created_at' => $this->created_at?->format('d/m/Y H:i'),
         ];
     }
 }

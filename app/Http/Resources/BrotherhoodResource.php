@@ -24,13 +24,8 @@ class BrotherhoodResource extends JsonResource
             'email' => $this->email,
             'nazarenes' => $this->nazarenes,
             'year_of_founding' => $this->year_of_founding,
-            'created_at' => $this->created_at?->toDateTimeString(),
-            'updated_at' => $this->updated_at?->toDateTimeString(),
-            'deleted_at' => $this->deleted_at?->toDateTimeString(),
-
-            // No se incluye 'deleted_at' porque normalmente no se muestra en la API
-            // Si $this->created_at tiene valor, llama a toDateTimeString().
-            // Si $this->created_at es null, simplemente devuelve null (sin error).
+            'created_at' => $this->created_at?->format('d/m/Y H:i'),
+            'updated_at' => $this->updated_at?->format('d/m/Y H:i'),
 
             'media' => MediaResource::collection(
                 $this->whenLoaded('media')

@@ -22,8 +22,8 @@ class MediaResource extends JsonResource
             'mime_type'  => $this->mime_type,
             'path'       => $this->path,
             'url'        => $this->url,
-            'created_at' => $this->created_at?->toDateTimeString(),
-            'updated_at' => $this->updated_at?->toDateTimeString(),
+            'created_at' => $this->created_at?->format('d/m/Y H:i'),
+            'updated_at' => $this->updated_at?->format('d/m/Y H:i'),
         ];
     }
 }

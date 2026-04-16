@@ -21,6 +21,7 @@ class ProcessionFactory extends Factory
         return [
             'name' => fake()->name(),
             'type' => fake()->randomElement($type),
+            'status' => fake()->randomElement(['published', 'draft']),
             'checkout_time' => fake()->dateTime(),
             'checkin_time' => fake()->dateTime(),
             'brotherhood_id' => Brotherhood::all()->random()->id

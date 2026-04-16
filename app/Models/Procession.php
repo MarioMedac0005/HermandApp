@@ -57,4 +57,13 @@ class Procession extends Model
     {
         return $this->hasMany(PointOfInterest::class);
     }
+
+    public function getTypeLabelAttribute()
+    {
+        return match($this->type) {
+            'virgin' => 'Virgen',
+            'christ' => 'Cristo',
+            default => $this->type
+        };
+    }
 }

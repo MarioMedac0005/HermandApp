@@ -21,6 +21,8 @@ class SegmentResource extends JsonResource
             'width' => $this->width,
             'visible' => $this->visible,
             'coordinates' => $this->coordinates,
+            'created_at' => $this->created_at?->format('d/m/Y H:i'),
+            'updated_at' => $this->updated_at?->format('d/m/Y H:i'),
         ];
     }
 }

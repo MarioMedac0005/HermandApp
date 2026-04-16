@@ -19,7 +19,15 @@ class AvailabilityController extends Controller
     {
         try {
 
-            $availability = Availability::paginate(10);
+            $user = auth('sanctum')->user();
+
+            $query = Availability::with('band');
+
+            if ($user && $user->band_id) {
+                $query->where('band_id', $user->band_id);
+            }
+
+            $availability = $query->paginate(10);
 
             return AvailabilityResource::collection($availability)
                 ->additional([
@@ -29,7 +37,10 @@ class AvailabilityController extends Controller
                 ->response()
                 ->setStatusCode(200);
         } catch (\Exception $e) {
-            return $this->errorResponse('Ha ocurrido un error al obtener el listado de disponibilidad', $e->getMessage());
+            return $this->errorResponse(
+                'Ha ocurrido un error al obtener el listado de disponibilidad',
+                $e->getMessage()
+            );
         }
     }
 
@@ -38,14 +49,13 @@ class AvailabilityController extends Controller
         try {
             $dates = Availability::where('band_id', $band->id)
                 ->pluck('date')
-                ->map(fn ($date) => Carbon::parse($date)->format('Y-m-d'))
+                ->map(fn($date) => Carbon::parse($date)->format('Y-m-d'))
                 ->values();
 
             return $this->successResponse(
                 'Días ocupados recuperados correctamente',
                 $dates
             );
-
         } catch (\Exception $e) {
             return $this->errorResponse(
                 'Ha ocurrido un error al obtener las fechas reservadas',
