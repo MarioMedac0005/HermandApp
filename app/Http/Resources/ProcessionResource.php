@@ -18,7 +18,7 @@ class ProcessionResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
-            'type' => $this->type_label,
+            'type' => $this->type,
             'status' => $this->status,
             'distance' => $this->distance,
             'points_count' => $this->points_count,
