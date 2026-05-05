@@ -23,11 +23,25 @@ class UpdateBandRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('bands', 'name')
+                    ->ignore($this->route('band')->id)
+                    ->whereNull('deleted_at'),
+            ],
             'description' => ['nullable', 'string', 'max:2000'],
             'city' => ['nullable', 'string', 'max:255', Rule::in(['Almería', 'Cádiz', 'Córdoba', 'Granada', 'Huelva', 'Jaén', 'Málaga', 'Sevilla'])],
             'rehearsal_space' => ['nullable', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255']
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('bands', 'email')
+                    ->ignore($this->route('band')->id)
+                    ->whereNull('deleted_at'),
+            ]
         ];
     }
 

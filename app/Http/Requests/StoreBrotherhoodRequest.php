@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreBrotherhoodRequest extends FormRequest
 {
@@ -22,14 +23,24 @@ class StoreBrotherhoodRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('brotherhoods', 'name')->whereNull('deleted_at'),
+            ],
             'description' => 'nullable|string|max:2000',
             'city' => 'required|string|max:255',
             'office' => 'required|string|max:255',
             'phone_number' => 'nullable|phone:ES',
-            'email' => 'nullable|email|unique:brotherhoods,email|max:255',
+            'email' => [
+                'nullable',
+                'email',
+                'max:255',
+                Rule::unique('brotherhoods', 'email')->whereNull('deleted_at'),
+            ],
             'nazarenes' => 'nullable|integer|min:0|max:10000',
-            'year_of_founding' => 'nullable|integer|digits:4|min:1000|max:' . date('Y')
+            'year_of_founding' => 'nullable|integer|digits:4|min:1000|max:' . date('Y'),
         ];
     }
 
