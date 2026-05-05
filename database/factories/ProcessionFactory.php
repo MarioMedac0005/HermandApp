@@ -2,29 +2,25 @@
 
 namespace Database\Factories;
 
-use App\Models\Brotherhood;
+use App\Models\Procession;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Procession>
- */
 class ProcessionFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    protected $model = Procession::class;
+
     public function definition(): array
     {
-        $type = ['christ', 'virgin'];
         return [
-            'name' => fake()->name(),
-            'type' => fake()->randomElement($type),
-            'status' => fake()->randomElement(['published', 'draft']),
-            'checkout_time' => fake()->dateTime(),
-            'checkin_time' => fake()->dateTime(),
-            'brotherhood_id' => Brotherhood::all()->random()->id
+            'name' => $this->faker->sentence(3),
+            'description' => $this->faker->sentence(),
+            'type' => $this->faker->randomElement(['christ', 'virgin']),
+            'status' => 'published',
+            'distance' => $this->faker->randomFloat(2, 1.5, 4.0),
+            'checkout_time' => now()->setTime(16, 0),
+            'checkin_time' => now()->setTime(23, 0),
+            'preview_url' => 'https://via.placeholder.com/640x480.png',
+            'brotherhood_id' => rand(1, 4),
         ];
     }
 }

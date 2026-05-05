@@ -14,10 +14,13 @@ class Brotherhood extends Model
 
     protected $fillable = [
         'name',
+        'description',
         'city',
         'office',
         'phone_number',
-        'email'
+        'email',
+        'nazarenes',
+        'year_of_founding'
     ];
 
     /**

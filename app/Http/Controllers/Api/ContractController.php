@@ -20,23 +20,21 @@ class ContractController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-
             $user = Auth::user();
 
             $query = Contract::with(['band', 'brotherhood', 'procession', 'invoice']);
 
             if ($user->hasRole('admin')) {
-                
-            } else if ($user->hasRole('gestor')) {
+            } elseif ($user->hasRole('gestor')) {
+
                 if ($user->band_id) {
                     $query->where('band_id', $user->band_id);
-                } else if ($user->brotherhood_id) {
+                } elseif ($user->brotherhood_id) {
                     $query->where('brotherhood_id', $user->brotherhood_id);
                 } else {
-                    // Gestor sin asignación → no puede ver nada
                     return response()->json([
                         'success' => false,
                         'message' => 'No tienes contratos asignados.'
@@ -49,12 +47,53 @@ class ContractController extends Controller
                 ], 403);
             }
 
-            $contracts = $query->paginate(10);
+            $filter = $request->get('filter');
+
+            $query->when($filter, function ($query) use ($filter) {
+
+                switch ($filter) {
+
+                    case 'pendientes':
+                        $query->where('status', 'pending');
+                        break;
+
+                    case 'rechazados':
+                        $query->whereIn('status', ['rejected', 'payment_failed']);
+                        break;
+
+                    case 'aceptados':
+                        $query->where('status', 'accepted');
+                        break;
+
+                    case 'pendientes_firma':
+                        $query->whereIn('status', ['signed_by_band', 'signed_by_brotherhood']);
+                        break;
+
+                    case 'firmados':
+                        $query->where('status', 'completed');
+                        break;
+
+                    case 'por_pagar':
+                        $query->where('status', 'completed')
+                            ->whereNull('invoice_id');
+                        break;
+
+                    case 'pagados':
+                        $query->where('status', 'paid');
+                        break;
+
+                    case 'expirados':
+                        $query->where('status', 'expired');
+                        break;
+                }
+            });
+
+            $contracts = $query->paginate(100);
 
             return ContractResource::collection($contracts)
                 ->additional([
                     'success' => true,
-                    'message' => 'Listado de contratos paginadas obtenido correctamente'
+                    'message' => 'Listado de contratos obtenido correctamente'
                 ])
                 ->response()
                 ->setStatusCode(200);
@@ -212,7 +251,6 @@ class ContractController extends Controller
                 'message' => 'Contrato aceptado correctamente',
                 'pdf_url' => asset('storage/' . $contract->pdf_path)
             ], 200);
-
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
@@ -252,7 +290,6 @@ class ContractController extends Controller
                 'success' => true,
                 'message' => 'Contrato rechazado correctamente'
             ], 200);
-            
         } catch (\Throwable $th) {
             return $this->errorResponse(
                 'Ha ocurrido un error al intentar rechazar el contrato',
@@ -305,7 +342,7 @@ class ContractController extends Controller
             'signed_by_band_at' => now(),
             'status' => 'signed_by_band'
         ]);
-        
+
         return response()->json([
             'success' => true,
             'message' => 'Contrato firmado correctamente',
@@ -367,11 +404,9 @@ class ContractController extends Controller
 
         if ($user->band_id === $contract->band_id) {
             $path = $contract->pdf_path;
-        } 
-        elseif ($user->brotherhood_id === $contract->brotherhood_id) {
+        } elseif ($user->brotherhood_id === $contract->brotherhood_id) {
             $path = $contract->band_signed_pdf_path;
-        } 
-        else {
+        } else {
             return response()->json([
                 'success' => false,
                 'message' => 'No autorizado.'
@@ -427,5 +462,4 @@ class ContractController extends Controller
             'pdf_url' => asset('storage/' . $contract->pdf_path)
         ], 200);
     }
-
 }
