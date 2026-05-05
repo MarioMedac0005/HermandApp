@@ -27,7 +27,7 @@ class UpdateBrotherhoodRequest extends FormRequest
             'description' => ['nullable', 'string', 'max:2000'],
             'city' => ['required', 'string', 'max:255'],
             'office' => ['required', 'string', 'max:255'],
-            'phone_number' => ['nullable', 'string', 'max:20'],
+            'phone_number' => 'nullable|phone:ES',
             'email' => [
                 'nullable',
                 'email',
@@ -48,6 +48,7 @@ class UpdateBrotherhoodRequest extends FormRequest
             'description.max' => 'La descripción no puede tener más de 2000 caracteres.',
             'city.required' => 'La ciudad es obligatoria.',
             'office.required' => 'El cargo u oficina es obligatorio.',
+            'phone_number.phone' => 'El número de teléfono no es válido.',
 
             'email.email' => 'Debe ser un correo electrónico válido.',
             'email.unique' => 'Ya existe una hermandad con ese email.',

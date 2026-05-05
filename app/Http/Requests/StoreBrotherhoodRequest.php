@@ -26,7 +26,7 @@ class StoreBrotherhoodRequest extends FormRequest
             'description' => 'nullable|string|max:2000',
             'city' => 'required|string|max:255',
             'office' => 'required|string|max:255',
-            'phone_number' => 'nullable|string|max:20',
+            'phone_number' => 'nullable|phone:ES',
             'email' => 'nullable|email|unique:brotherhoods,email|max:255',
             'nazarenes' => 'nullable|integer|min:0|max:10000',
             'year_of_founding' => 'nullable|integer|digits:4|min:1000|max:' . date('Y')
@@ -41,6 +41,7 @@ class StoreBrotherhoodRequest extends FormRequest
             'description.max' => 'La descripción no puede tener más de 2000 caracteres.',
             'city.required' => 'La ciudad es obligatoria.',
             'office.required' => 'La oficina es obligatoria.',
+            'phone_number.phone' => 'El número de teléfono no es válido.',
 
             'email.email' => 'El email debe ser válido.',
             'email.unique' => 'Ya existe una hermandad con ese email.',
