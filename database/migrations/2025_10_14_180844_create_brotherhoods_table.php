@@ -18,11 +18,12 @@ return new class extends Migration
             $table->enum('city', ['Almeria', 'Cadiz', 'Cordoba', 'Granada', 'Huelva', 'Jaen', 'Malaga', 'Sevilla']);
             $table->string('office');
             $table->string('phone_number')->nullable();
-            $table->string('email')->nullable()->unique();
+            $table->string('email')->nullable();
             $table->integer('nazarenes')->nullable();
             $table->year('year_of_founding')->nullable();
             $table->timestamps();
             $table->softDeletes();
+            $table->unique(['email', 'deleted_at']);
         });
     }
 

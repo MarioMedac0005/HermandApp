@@ -24,7 +24,12 @@ class UpdateUserRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'surname' => ['nullable', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $this->route('user')->id],
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('users', 'email')->ignore($this->route('user')->id)->whereNull('deleted_at'),
+            ],
             'password' => ['nullable', 'string', 'min:8'],
             'type' => ['in:band_admin,brotherhood_admin,guest'],
             'band_id' => ['nullable', 'exists:bands,id'],

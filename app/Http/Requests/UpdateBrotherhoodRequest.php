@@ -23,7 +23,14 @@ class UpdateBrotherhoodRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('brotherhoods', 'name')
+                    ->ignore($this->route('brotherhood')->id)
+                    ->whereNull('deleted_at'),
+            ],
             'description' => ['nullable', 'string', 'max:2000'],
             'city' => ['required', 'string', 'max:255'],
             'office' => ['required', 'string', 'max:255'],
@@ -32,7 +39,9 @@ class UpdateBrotherhoodRequest extends FormRequest
                 'nullable',
                 'email',
                 'max:255',
-                Rule::unique('brotherhoods', 'email')->ignore($this->route('brotherhood'))
+                Rule::unique('brotherhoods', 'email')
+                    ->ignore($this->route('brotherhood')->id)
+                    ->whereNull('deleted_at'),
             ],
             'nazarenes' => ['nullable', 'integer', 'min:0'],
             'year_of_founding' => ['nullable', 'integer', 'digits:4', 'min:1000', 'max:' . date('Y')],
