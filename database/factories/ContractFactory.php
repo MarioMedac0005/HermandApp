@@ -32,17 +32,7 @@ public function definition()
         ]);
     }
 
-    $statuses = [
-        'pending',
-        'rejected',
-        'accepted',
-        'signed_by_band',
-        'signed_by_brotherhood',
-        'completed',
-        'paid',
-        'payment_failed',
-        'expired',
-    ];
+    $statuses = 'pending';
 
     $status = $this->faker->randomElement($statuses);
 
