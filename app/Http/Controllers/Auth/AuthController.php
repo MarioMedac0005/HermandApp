@@ -4,14 +4,12 @@ namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Models\OrganizationRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\AuthUserResource;
 use App\Http\Requests\StoreOrganizationRequest;
-use Illuminate\Support\Facades\Password;
 
 class AuthController extends Controller
 {
@@ -40,13 +38,17 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        $user->load('band');
-
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Credenciales incorrectas',
             ], 401);
+        }
+
+        if ($user->band_id) {
+            $user->load('band');
+        } elseif ($user->brotherhood_id) {
+            $user->load('brotherhood');
         }
 
         $user->tokens()->delete();

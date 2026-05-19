@@ -112,22 +112,41 @@ class ContractController extends Controller
     public function store(StoreContractRequest $request)
     {
         try {
+            // 1. Extraemos los datos validados
+            $datosValidados = $request->validated();
 
-            $contract = Contract::create($request->validated());
+            // 2. Comprobamos si la banda ya está ocupada ese día
+            $fechaInicio = Carbon::parse($datosValidados['performance_date'])->startOfDay();
+            $fechaFin = Carbon::parse($datosValidados['performance_date'])->endOfDay();
+
+            $fechaOcupada = Availability::where('band_id', $datosValidados['band_id'])
+                ->whereBetween('date', [$fechaInicio, $fechaFin])
+                ->exists();
+
+            if ($fechaOcupada) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se puede crear la propuesta. La banda ya está ocupada en esta fecha.',
+                ], 422); // 422 Unprocessable Entity es el código ideal para esto
+            }
+
+            // 3. Si la fecha está libre, creamos el contrato
+            $contract = Contract::create($datosValidados);
 
             $contract->load(['band', 'brotherhood', 'procession']);
 
             return (new ContractResource($contract))
                 ->additional([
                     'success' => true,
-                    'message' => 'La contratos ha sido creada correctamente'
+                    'message' => 'El contrato ha sido creado correctamente'
                 ])
                 ->response()
                 ->setStatusCode(201);
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Ha ocurrido un error al intentar crear una contratos',
+                'message' => 'Ha ocurrido un error al intentar crear el contrato',
                 'error' => $e->getMessage(),
             ], 500);
         }
@@ -267,7 +286,7 @@ class ContractController extends Controller
             $user = Auth::user();
 
             // 1# Pertenece el usuario a la banda del contrato que quiere rechazar.
-            if ($user->band_id !== $contract->band_id) {
+            if ($user->band_id != $contract->band_id) {
                 return $this->errorResponse(
                     'No puedes rechazar este contrato',
                     'No pertenece el usuario a la banda del contrato que quiere rechazar.'
