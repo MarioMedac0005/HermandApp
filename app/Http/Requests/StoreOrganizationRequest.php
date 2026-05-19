@@ -38,7 +38,11 @@ class StoreOrganizationRequest extends FormRequest
 
             // Hermandad
             'organization.canonicalSeat' => 'required_if:type,brotherhood|string|max:255',
-            'organization.phone' => 'required_if:type,brotherhood|string|max:30',
+            'organization.phone' => [
+                'required_if:type,brotherhood',
+                'nullable',
+                'phone:ES'
+            ],
 
             // Banda
             'organization.description' => 'required_if:type,band|string|max:500',
@@ -77,14 +81,13 @@ class StoreOrganizationRequest extends FormRequest
             'organization.city.in' => 'La provincia seleccionada no es válida.',
 
             'organization.canonicalSeat.required_if' =>
-                'La sede canónica es obligatoria para una hermandad.',
-            'organization.phone.required_if' =>
-                'El teléfono es obligatorio para una hermandad.',
+            'La sede canónica es obligatoria para una hermandad.',
 
-            'organization.description.required_if' =>
-                'La descripción es obligatoria para una banda.',
-            'organization.rehearsalPlace.required_if' =>
-                'El lugar de ensayo es obligatorio para una banda.',
+            'organization.phone.required_if' => 'El teléfono es obligatorio para una hermandad.',
+            'organization.phone.phone' => 'El número de teléfono no es un formato válido para España.',
+
+            'organization.description.required_if' => 'La descripción es obligatoria para una banda.',
+            'organization.rehearsalPlace.required_if' => 'El lugar de ensayo es obligatorio para una banda.',
         ];
     }
 }
