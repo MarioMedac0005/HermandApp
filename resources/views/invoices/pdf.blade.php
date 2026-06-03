@@ -366,7 +366,7 @@
             </div>
             @if($invoice->commission_amount && $invoice->commission_amount > 0)
                 <div class="total-row">
-                    <div class="total-label">Comisión de Plataforma</div>
+                    <div class="total-label">Comisión de Plataforma (5%)</div>
                     <div class="total-value">- {{ number_format($invoice->commission_amount, 2, ',', '.') }} €</div>
                 </div>
                 <div class="total-row grand-total">
